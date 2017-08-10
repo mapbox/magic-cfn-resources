@@ -1,0 +1,38 @@
+{
+  "name": "@mapbox/magic-cfn-resources",
+  "version": "1.0.0",
+  "description": "Build custom CloudFormation resources in a template",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "engines": {
+    "node": "0.10.38"
+  },
+  "scripts": {
+    "docs": "documentation -f html index.js -o docs --lint && docco cloudformation/custom-cfn-functions.template.js",
+    "pretest": "eslint --no-eslintrc -c .eslintrc test lib",
+    "test": "tape test/*.test.js",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mapbox/magic-cfn-resources.git"
+  },
+  "author": "Mapbox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mapbox/magic-cfn-resources/issues"
+  },
+  "homepage": "https://github.com/mapbox/magic-cfn-resources#readme",
+  "devDependencies": {
+    "@mapbox/mock-aws-sdk-js": "0.0.5",
+    "@mapbox/cloudfriend": "^1.8.1",
+    "docco": "^0.7.0",
+    "documentation": "^1.4.0",
+    "eslint": "^1.4.1",
+    "tape": "^4.0.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1.35"
+  }
+}
