@@ -1,6 +1,6 @@
 # magic-cfn-resources
 
-Builds [Lambda-backed custom Cloudformation resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html). When `magic-cfn-resources`'s' `build` method is used, a Lambda function is built and used to build a custom resource. Resources that can be built with `magic-cfn-resources` are: `SnsSubscription`, `DynamoDBStreamLabel`, `StackOutputs`, and `SpotFleet`.
+Builds [Lambda-backed custom Cloudformation resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html). When you use `magic-cfn-resources`'s `build` method, a Lambda function is created in your stack and used to build a custom resource. Resources that can be built with `magic-cfn-resources` are: `SnsSubscription`, `DynamoDBStreamLabel`, `StackOutputs`, and `SpotFleet`.
 
 ## Provided resources in detail:
 
