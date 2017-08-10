@@ -1,6 +1,6 @@
 # magic-cfn-resources
 
-Builds [Lambda-backed custom Cloudformation resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html). When `magic-cfn-resources`'s' `build` method is used, a `Lambda` function is built and used to create a resource. Resources that can be built with `magic-cfn-resources` are: `SnsSubscription`, `DynamoDBStreamLabel`, `StackOutputs`, and `SpotFleet`.
+Builds [Lambda-backed custom Cloudformation resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html). When `magic-cfn-resources`'s' `build` method is used, a Lambda function is built and used to build a custom resource. Resources that can be built with `magic-cfn-resources` are: `SnsSubscription`, `DynamoDBStreamLabel`, `StackOutputs`, and `SpotFleet`.
 
 ## Provided resources in detail:
 
@@ -121,4 +121,4 @@ module.exports = cloudfriend.merge(SnsSubscription, <Stack Resources>);
 
 ## To build new functions
 
-Check out [contributing.md](https://github.com/mapbox/magic-cfn-functions/blob/master/contributing.md) for a discussion of the framework this library provides for writing other functions.
+Check out [contributing.md](https://github.com/mapbox/magic-cfn-resources/blob/master/contributing.md) for a discussion of the framework this library provides for writing other functions.
