@@ -98,7 +98,7 @@ test('[build] error scenarios', assert => {
 test('[build] success', assert => {
   const template = build({
     CustomFunctionName: 'SpotFleet',
-    LogicalName: 'SpotFleetResource',
+    LogicalName: 'SpotFleetLogicalName',
     S3Key: 'lambda/code',
     S3Bucket: 'code',
     Handler: 'my.handler',
@@ -108,7 +108,7 @@ test('[build] success', assert => {
     }
   });
 
-  assert.deepEquals(Object.keys(template.Resources), ['SpotFleetRole', 'SpotFleetFunction', 'SpotFleet']);
+  assert.deepEquals(Object.keys(template.Resources), ['SpotFleetRole', 'SpotFleetFunction', 'SpotFleetLogicalName']);
   assert.equals(template.Resources.SpotFleetRole.Type, 'AWS::IAM::Role');
   assert.equals(template.Resources.SpotFleetFunction.Type, 'AWS::Lambda::Function');
 
