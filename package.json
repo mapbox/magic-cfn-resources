@@ -10,7 +10,7 @@
     "node": "0.10.38"
   },
   "scripts": {
-    "docs": "documentation -f html index.js -o docs --lint && docco cloudformation/custom-cfn-functions.template.js",
+    "docs": "documentation -f html index.js -o docs --lint",
     "pretest": "eslint --no-eslintrc -c .eslintrc test lib",
     "test": "tape test/*.test.js"
   },
@@ -27,7 +27,6 @@
   "devDependencies": {
     "@mapbox/mock-aws-sdk-js": "0.0.5",
     "@mapbox/cloudfriend": "^1.8.1",
-    "docco": "^0.7.0",
     "documentation": "^1.4.0",
     "eslint": "^1.4.1",
     "tape": "^4.0.0"
