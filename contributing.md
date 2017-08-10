@@ -68,7 +68,11 @@ const customFunctions = {
     newFunction: {
       Type: 'AWS::Lambda::Function',
       ...
-    }
+    },
+    newResource: {
+      Type: 'Custom::newFunction',
+      ...
+    } 
   }
 };
 ```

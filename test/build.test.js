@@ -13,7 +13,7 @@ test('[build] error scenarios', assert => {
       Handler: 'my.handler',
       Properties: { isBogus: true }
     });
-  }, /bogus is not a custom-cfn-function/, 'not a valid CustomFunctionName');
+  }, /bogus is not an available function/, 'not a valid CustomFunctionName');
 
   // Test that you need CustomFunctionName
   assert.throws(() => {

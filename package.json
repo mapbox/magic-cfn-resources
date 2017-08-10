@@ -12,7 +12,7 @@
   "scripts": {
     "docs": "documentation -f html index.js -o docs --lint && docco cloudformation/custom-cfn-functions.template.js",
     "pretest": "eslint --no-eslintrc -c .eslintrc test lib",
-    "test": "tape test/*.test.js",
+    "test": "tape test/*.test.js"
   },
   "repository": {
     "type": "git",
