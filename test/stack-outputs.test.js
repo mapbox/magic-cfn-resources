@@ -7,14 +7,14 @@ test('[stack-outputs] create handles errors', assert => {
   AWS.stub('CloudFormation', 'describeStacks', (opts, cb) => {
     assert.deepEquals(opts, {
       StackName: 'StackName'
-    });
+    }, 'describeStacks params');
     return cb(new Error('random error'));
   }); 
 
   const stackoutputs = new StackOutputs('StackName', 'us-east-1');
 
   stackoutputs.create((err) => {
-    assert.equals(err.message, 'random error');
+    assert.equals(err.message, 'random error', 'errors');
     AWS.CloudFormation.restore();
     assert.end();
   });
@@ -24,7 +24,7 @@ test('[stack-outputs] create handles success', assert => {
   const describeStacks = AWS.stub('CloudFormation', 'describeStacks', (opts, cb) => {
     assert.deepEquals(opts, {
       StackName: 'StackName'
-    });
+    }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
   }); 
 
@@ -43,7 +43,7 @@ test('[stack-outputs] update does the same thing as create', assert => {
   AWS.stub('CloudFormation', 'describeStacks', (opts, cb) => {
     assert.deepEquals(opts, {
       StackName: 'StackName'
-    });
+    }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
   }); 
 
@@ -81,7 +81,7 @@ test('[stack-outputs] manage parses events and relays LatestStreamLabel through 
   const describeStacks = AWS.stub('CloudFormation', 'describeStacks', (opts, cb) => {
     assert.deepEquals(opts, {
       StackName: 'Stack Name'
-    });
+    }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
   }); 
 
@@ -99,9 +99,9 @@ test('[stack-outputs] manage parses events and relays LatestStreamLabel through 
     RequestType: 'CREATE'
   }, {
     done: (err, body) => {
-      assert.ifError(err);
+      assert.ifError(err, 'no error');
       assert.ok (describeStacks.callCount === 1, 'describeStacks called');
-      assert.equals(JSON.parse(body).Status, 'SUCCESS');
+      assert.equals(JSON.parse(body).Status, 'SUCCESS', 'status is success');
       AWS.CloudFormation.restore();
       assert.end();
     }
