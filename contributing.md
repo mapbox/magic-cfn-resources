@@ -55,25 +55,16 @@ Then in `index.js`, add a reference to the static `manage` function to be used b
 module.exports.myCustomResource = require('./functions/my-custom-resource').manage;
 ```
 
-Finally, add the AWS resources to the `customFunctions` mapping in `build.js` in `/lib/`.
+Finally, add the AWS:IAM:Role resource to `roles` in `build.js` in `/lib/`.
+
 
 ```js
-const customFunctions = {
+const roles = {
   ...
-  newFunctionName: {
-    newFunctionRole: {
-      Type: 'AWS::IAM::Role',
-      ...
-    },
-    newFunction: {
-      Type: 'AWS::Lambda::Function',
-      ...
-    },
-    newResource: {
-      Type: 'Custom::newFunction',
-      ...
-    } 
-  }
+  newResourceName: {
+    Type: 'AWS::IAM::Role',
+    ...
+  },
 };
 ```
 ## Documentation

@@ -53,7 +53,7 @@ const magicCfnResources = require('@mapbox/magic-cfn-resources');
 *SnsSubscription*
 ```js
 const SnsSubscription = magicCfnResources.build({
-  CustomFunctionName: 'SnsSubscription',
+  CustomResourceName: 'SnsSubscription',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
   S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
   S3Key: 'Key', // the S3 key for where the handler lives
@@ -69,7 +69,7 @@ const SnsSubscription = magicCfnResources.build({
 *DynamoDBStreamLabel*
 ```js
 const DynamoDBStreamLabel = magicCfnResources.build({
-  CustomFunctionName: 'DynamoDBStreamLabel',
+  CustomResourcenName: 'DynamoDBStreamLabel',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
   S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
   S3Key: 'Key', // the S3 key for where the handler lives
@@ -84,7 +84,7 @@ const DynamoDBStreamLabel = magicCfnResources.build({
 *StackOutputs*
 ```js
 const StackOutputs = magicCfnResources.build({
-  CustomFunctionName: 'StackOutputs',
+  CustomResourceName: 'StackOutputs',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
   S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
   S3Key: 'Key', // the S3 key for where the handler lives
@@ -99,7 +99,7 @@ const StackOutputs = magicCfnResources.build({
 *SpotFleet*
 ```js
 const SpotFleet = magicCfnResources.build({
-  CustomFunctionName: 'SpotFleet',
+  CustomResourceName: 'SpotFleet',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
   S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
   S3Key: 'Key', // the S3 key for where the handler lives

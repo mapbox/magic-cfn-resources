@@ -21,7 +21,7 @@ test('[spot-fleet] create handles errors', assert => {
         ValidUntil : 'end date'
       },
       DryRun: false
-    });
+    }, 'requestSpotFleet parameters');
     return cb(new Error('random error'));
   }); 
 
@@ -41,7 +41,7 @@ test('[spot-fleet] create handles errors', assert => {
   }, 'us-east-1', false, 'requestId');
 
   spotfleet.create((err) => {
-    assert.equals(err.message, 'random error');
+    assert.equals(err.message, 'random error', 'error occurs');
     AWS.EC2.restore();
     assert.end();
   });
@@ -86,7 +86,7 @@ test('[spot-fleet] create handles success', assert => {
 
   spotfleet.create((err) => {
     assert.ifError(err, 'no error');
-    assert.equals(requestSpotFleet.callCount, 1);
+    assert.equals(requestSpotFleet.callCount, 1, 'requestSpotFleet called');
     requestSpotFleet.restore();
     assert.end();
   });
@@ -122,7 +122,7 @@ test('[spot-fleet] update updates the requestId, yields the requestId from _this
 
   spotfleet.update((err, res) => {
     assert.ifError(err, 'should not error');
-    assert.equal(describeSpotFleetRequests.callCount, 2);
+    assert.equal(describeSpotFleetRequests.callCount, 2, 'describeSpotFleetRequests called twice');
     assert.equal(res, 'sfr-secondrequestid222222222222222222222', 'request id coming from _this' );
     AWS.EC2.restore();
     assert.end();
@@ -245,7 +245,7 @@ test('[spot-fleet] manage parses events and relays LatestStreamLabel through Res
   }, {
     done: (err, body) => {
       assert.ifError(err, 'should not error');
-      assert.equals(JSON.parse(body).Status, 'SUCCESS');
+      assert.equals(JSON.parse(body).Status, 'SUCCESS', 'status is success');
       requestSpotFleet.restore();
       assert.end();
     }

@@ -16,7 +16,7 @@ test('[sns-subscription] create handles errors', assert => {
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone@mapbox.com');
 
   subscription.create((err) => {
-    assert.equals(err.message, 'random error');
+    assert.equals(err.message, 'random error', 'errors');
     AWS.SNS.restore();
     assert.end();
   });
@@ -35,8 +35,8 @@ test('[sns-subscription] create handles success', assert => {
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone@mapbox.com');
 
   subscription.create((err) => {
-    assert.ifError(err);
-    assert.equals(subscribe.callCount, 1);
+    assert.ifError(err, 'should not error');
+    assert.equals(subscribe.callCount, 1, 'subscribe called once');
     AWS.SNS.restore();
     assert.end();
   });
@@ -89,10 +89,10 @@ test('[sns-subscription] update unsubscribes old endpoint and subscribes the new
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone-new@mapbox.com', 'someone@mapbox.com');
 
   subscription.update((err) => {
-    assert.ifError(err);
-    assert.equals(subscribe.callCount, 1);
-    assert.equals(unsubscribe.callCount, 1);
-    assert.equals(listSubscriptionsByTopic.callCount, 2);
+    assert.ifError(err, 'should not error');
+    assert.equals(subscribe.callCount, 1, 'subscribed called once');
+    assert.equals(unsubscribe.callCount, 1, 'unsubscribe called once');
+    assert.equals(listSubscriptionsByTopic.callCount, 2, 'listSubscriptionsByTopic called twice');
     AWS.SNS.restore();
     assert.end();
   });
@@ -129,10 +129,10 @@ test('[sns-subscription] update still works when old subscription is not found',
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone-new@mapbox.com', 'someone@mapbox.com');
 
   subscription.update((err) => {
-    assert.ifError(err);
-    assert.equals(subscribe.callCount, 1);
-    assert.equals(unsubscribe.callCount, 0);
-    assert.equals(listSubscriptionsByTopic.callCount, 1);
+    assert.ifError(err, 'no error');
+    assert.equals(subscribe.callCount, 1, 'subscribe called once');
+    assert.equals(unsubscribe.callCount, 0, 'unsubscribe not called');
+    assert.equals(listSubscriptionsByTopic.callCount, 1, 'listSubscriptionsByTopic called once');
     AWS.SNS.restore();
     assert.end();
   });
@@ -161,9 +161,9 @@ test('[sns-subscription] delete does same thing as update', assert => {
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone-new@mapbox.com', 'someone@mapbox.com');
 
   subscription.delete((err) => {
-    assert.ifError(err);
-    assert.equals(unsubscribe.callCount, 0);
-    assert.ok(listSubscriptionsByTopic.callCount > 0)
+    assert.ifError(err, 'should not error');
+    assert.equals(unsubscribe.callCount, 0, 'unsubscribe not called');
+    assert.ok(listSubscriptionsByTopic.callCount > 0, 'listSubscriptionsByTopic called');
     AWS.SNS.restore();
     assert.end();
   });
@@ -204,7 +204,7 @@ test('[sns-subscription] manage parses events and relays LatestStreamLabel throu
     RequestType: 'CREATE'
   }, {
     done: (err, body) => {
-      assert.ifError(err);
+      assert.ifError(err, 'should not error');
       assert.equals(JSON.parse(body).Status, 'SUCCESS');
       subscribe.restore();
       assert.end();
