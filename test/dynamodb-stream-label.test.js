@@ -14,7 +14,7 @@ test('[dynamodb-stream-label] create handles errors', assert => {
   AWS.stub('DynamoDB', 'describeTable', (opts, cb) => {
     assert.deepEquals(opts, { TableName: 'special-table' }, 'describeTable params');
     return cb(new Error('random error'));
-  }); 
+  });
 
   const stream = new DynamoDBStreamLabel('special-table', 'us-east-1');
 
@@ -30,16 +30,16 @@ test('[dynamodb-stream-label] create handles success', assert => {
     assert.deepEquals(opts, { TableName: 'special-table' }, 'describeTable params');
     return cb(null, {
       Table: {
-        LatestStreamLabel: (new Date(2017, 2, 2)).toISOString()
+        LatestStreamLabel: '2017-03-02T05:00:00.000Z'
       }
     });
-  }); 
+  });
 
   const stream = new DynamoDBStreamLabel('special-table', 'us-east-1');
 
   stream.create((err, label) => {
     assert.ifError(err, 'should not error');
-    assert.equals(label, '2017-03-02T08:00:00.000Z', 'stream label');
+    assert.equals(label, '2017-03-02T05:00:00.000Z', 'stream label');
     AWS.DynamoDB.restore();
     assert.end();
   });
@@ -51,7 +51,7 @@ test('[dynamodb-stream-label] create handles missing stream label', assert => {
     return cb(null, {
       Table: {}
     });
-  }); 
+  });
 
   const stream = new DynamoDBStreamLabel('special-table', 'us-east-1');
 
@@ -67,16 +67,16 @@ test('[dynamodb-stream-label] update does the same thing as create', assert => {
     assert.deepEquals(opts, { TableName: 'special-table' }, 'describeTable params');
     return cb(null, {
       Table: {
-        LatestStreamLabel: (new Date(2017, 2, 2)).toISOString()
+        LatestStreamLabel: '2017-03-02T05:00:00.000Z'
       }
     });
-  }); 
+  });
 
   const stream = new DynamoDBStreamLabel('special-table', 'us-east-1');
 
   stream.update((err, label) => {
     assert.ifError(err, 'should not error');
-    assert.equals(label, '2017-03-02T08:00:00.000Z', 'stream label');
+    assert.equals(label, '2017-03-02T05:00:00.000Z', 'stream label');
     AWS.DynamoDB.restore();
     assert.end();
   });
@@ -87,10 +87,10 @@ test('[dynamodb-stream-label] delete does nothing', assert => {
     assert.deepEquals(opts, { TableName: 'special-table' }, 'describeTable params');
     return cb(null, {
       Table: {
-        LatestStreamLabel: (new Date(2017, 2, 2)).toISOString()
+        LatestStreamLabel: '2017-03-02T05:00:00.000Z'
       }
     });
-  }); 
+  });
 
   const stream = new DynamoDBStreamLabel('special-table', 'us-east-1');
 
@@ -106,10 +106,10 @@ test('[dynamodb-stream-label] manage parses events and relays LatestStreamLabel 
     assert.deepEquals(opts, { TableName: 'special-table' }, 'describeTable params');
     return cb(null, {
       Table: {
-        LatestStreamLabel: (new Date(2017, 2, 2)).toISOString()
+        LatestStreamLabel: '2017-03-02T05:00:00.000Z'
       }
     });
-  }); 
+  });
 
   http.request = (options, cb) => {
     return {
@@ -137,7 +137,7 @@ test('[dynamodb-stream-label] manage parses events and relays LatestStreamLabel 
   }, {
     done: (err, body) => {
       assert.ifError(err, 'should not error');
-      assert.equals(JSON.parse(body).PhysicalResourceId, '2017-03-02T08:00:00.000Z', 'PhysicalResourceId is stream label'); 
+      assert.equals(JSON.parse(body).PhysicalResourceId, '2017-03-02T05:00:00.000Z', 'PhysicalResourceId is stream label');
       AWS.DynamoDB.restore();
       assert.end();
     }
