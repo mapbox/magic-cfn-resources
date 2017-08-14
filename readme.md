@@ -1,5 +1,7 @@
 # magic-cfn-resources
 
+[![Build Status](https://travis-ci.org/mapbox/magic-cfn-resources.svg?branch=master)](https://travis-ci.org/mapbox/magic-cfn-resources)
+
 ![](./assets/magicspaghetti.gif)
 
 Builds [Lambda-backed custom Cloudformation resources](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/template-custom-resources-lambda.html). When you use `magic-cfn-resources`'s `build` method, a Lambda function is created in your stack and used to build a custom resource. Resources that can be built with `magic-cfn-resources` are: `SnsSubscription`, `DynamoDBStreamLabel`, `StackOutputs`, and `SpotFleet`.
@@ -64,7 +66,7 @@ const SnsSubscription = magicCfnResources.build({
     SnsTopicArn: 'Topic Arn', // the ARN of the SNS Topic you are subscribing to
     Protocol: 'Protocol', // the SNS protocol, i.e. 'sqs', 'email'
     Endpoint: 'Endpoint' // the endpoint you are subscribing
-  } 
+  }
 });
 ```
 
@@ -79,7 +81,7 @@ const DynamoDBStreamLabel = magicCfnResources.build({
   Properties: {
     TableName: 'Name of Table', // the name of the DynamoDB table
     TableRegion: 'Region' // the region of the DynamoDB table i.e.: 'us-east-1'
-  } 
+  }
 });
 ```
 
@@ -94,7 +96,7 @@ const StackOutputs = magicCfnResources.build({
   Properties: {
     StackName: 'Name', // name of the CloudFormation stack
     StackRegion: 'region' // region of the CloudFormation stack i.e.: 'us-east-1'
-  } 
+  }
 });
 ```
 
@@ -109,7 +111,7 @@ const SpotFleet = magicCfnResources.build({
   Properties: {
     SpotFleetRequestConfigData: { }, // object with SpotFleet configuration specifics
     SpotFleetRegion: 'region', // region of the SpotFleet i.e.: 'us-east-1'
-  } 
+  }
 });
 ```
 
