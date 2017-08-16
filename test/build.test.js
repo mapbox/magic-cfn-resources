@@ -118,3 +118,22 @@ test('[build] success', assert => {
 
   assert.end();
 });
+
+test('[build] success with Conditional', assert => {
+  const template =  build({
+    CustomResourceName: 'SpotFleet',
+    LogicalName: 'SpotFleetLogicalName',
+    S3Key: 'lambda/code',
+    S3Bucket: 'code',
+    Handler: 'my.handler',
+    Properties: { 
+      SpotFleetRequestConfigData: { },
+      SpotFleetRegion: 'region'
+    },
+    Condition: 'Conditional'
+  });
+  assert.equals(template.Resources.SpotFleetLogicalNameRole.Condition, 'Conditional', 'Conditional in Role');
+  assert.equals(template.Resources.SpotFleetLogicalNameFunction.Condition, 'Conditional', 'Conditional in Function');
+  assert.equals(template.Resources.SpotFleetLogicalName.Condition, 'Conditional', 'Conditional in Custom Resource');
+  assert.end();
+})
