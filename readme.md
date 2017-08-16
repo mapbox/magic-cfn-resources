@@ -114,7 +114,22 @@ const SpotFleet = magicCfnResources.build({
   }
 });
 ```
-
+#### Optional Condition
+A [Condition](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) from your template can also be passed into `build`.
+i.e.:
+const SpotFleet = magicCfnResources.build({
+  CustomResourceName: 'SpotFleet',
+  LogicalName: 'Logical Name', // a name to refer to the custom resource being built
+  S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
+  S3Key: 'Key', // the S3 key for where the handler lives
+  Handler: 'spot-fleet.SpotFleet', // references the handler created in the repository
+  Properties: {
+    SpotFleetRequestConfigData: { }, // object with SpotFleet configuration specifics
+    SpotFleetRegion: 'region', // region of the SpotFleet i.e.: 'us-east-1'
+  },
+  Condition: 'Condition' // the Logical ID of a condition
+});
+```
 #### Merge the resources created with `build` with the resources already in the stack's template:. i.e.:
 ```js
 const cloudfriend = require('@mapbox/cloudfriend');
