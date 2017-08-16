@@ -117,6 +117,7 @@ const SpotFleet = magicCfnResources.build({
 #### Optional Condition
 A [Condition](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) from your template can also be passed into `build`.
 i.e.:
+```
 const SpotFleet = magicCfnResources.build({
   CustomResourceName: 'SpotFleet',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
