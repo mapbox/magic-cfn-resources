@@ -52,3 +52,26 @@ function S3BucketNotificationConfig(snsTopicArn, bucket, bucketRegion, filters){
  *   }
  * }
  */
+
+ S3BucketNotificationConfig.manage = function(event, context) {
+  if (!utils.validCloudFormationEvent(event))
+    return context.done(null, 'ERROR: Invalid CloudFormation event');
+  var response = new Response(event, context);
+  var requestType = event.RequestType.toLowerCase();
+  var notificationConfig;
+
+  try {
+    notificationConfig = new S3BucketNotificationConfig(
+      event.ResourceProperties.SnsTopicArn,
+      event.ResourceProperties.Bucket,
+      event.ResourceProperties.BucketRegion,
+      event.ResourceProperties.Filters
+    );
+  } catch (err) {
+    return response.send(err);
+  }
+
+  notificationConfig[requestType](function(err) {
+    response.send(err);
+  });
+ }
