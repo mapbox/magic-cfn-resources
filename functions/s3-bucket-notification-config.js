@@ -75,3 +75,44 @@ function S3BucketNotificationConfig(snsTopicArn, bucket, bucketRegion, filters){
     response.send(err);
   });
  }
+
+ /**
+ * Create  the notification configuration
+ * @param {function} callback - a function to handle the response
+ */
+
+S3BucketNotificationConfig.prototype.create = function(callback) {
+  this.s3.getBucketNotificationConfiguration(function(err, data) {
+    if (err) return callback(err);
+
+    var config = {
+      TopicArn: this.snsTopicArn,
+      Events: ['s3:ObjectCreated:*'],
+      Filter: {
+        Key: {
+          FilterRules: this.filters
+        }
+      }
+    };
+
+    var index = (data.TopicConfigurations || []).reduce(function(index, config, i) {
+      if(!config.Filter || !config.Filter.Key || !config.Filter.Key.FilterRules)
+        return index;
+      var prefix = config.Filter.Key..FilterRules.find(function(key) {
+        return key.Name === 'Prefix';
+      });
+      index[prefix.Value] = i.toString();
+
+      return index;
+    }, {});
+
+    if (index[process.env.StackName]) {
+      data.TopicConfigurations.splice(Number(index[process.env.StackName]), 1, config);
+    } else {
+      data.TopicConfigurations = data.TopicConfigurations || [];
+      data.TopicConfigurations.push(config);
+    }
+
+    s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, callback);
+  });
+}

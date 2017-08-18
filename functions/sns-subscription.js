@@ -70,7 +70,7 @@ SnsSubscription.manage = function(event, context) {
 };
 
 /**
- * Create a the subscription
+ * Create  the subscription
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.create = function(callback) {
