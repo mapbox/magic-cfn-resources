@@ -84,7 +84,7 @@ SnsSubscription.prototype.create = function(callback) {
 };
 
 /**
- * Update a the subscription by unsubscribing an old endpoint and subscribing a new one
+ * Update the subscription by unsubscribing an old endpoint and subscribing a new one
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.update = function(callback) {
@@ -98,7 +98,7 @@ SnsSubscription.prototype.update = function(callback) {
 };
 
 /**
- * Delete a the subscription
+ * Delete the subscription
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.delete = function(callback) {

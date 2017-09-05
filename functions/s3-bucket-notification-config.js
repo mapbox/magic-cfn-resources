@@ -11,7 +11,9 @@ module.exports = S3BucketNotificationConfig;
  * @param {string} bucketRegion - the region of the S3 bucket
  * @param {array} filters - an array of filtering rules https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
  */
-function S3BucketNotificationConfig(snsTopicArn, bucket, bucketRegion, filters){
+function S3BucketNotificationConfig(configType, endpoint, bucket, bucketRegion, filterRules, eventType){
+  if(!configType || !configType in new Set('TopicConfig', 'LambdaConfig', 'QueueConfig'))
+      throw new Error('Missing or invalid ConfigType')
   if(!snsTopicArn)
     throw new Error('Missing Parameter SnsTopicArn');
   if(!bucket)
@@ -80,7 +82,6 @@ function S3BucketNotificationConfig(snsTopicArn, bucket, bucketRegion, filters){
  * Create  the notification configuration
  * @param {function} callback - a function to handle the response
  */
-
 S3BucketNotificationConfig.prototype.create = function(callback) {
   this.s3.getBucketNotificationConfiguration(function(err, data) {
     if (err) return callback(err);
@@ -98,7 +99,7 @@ S3BucketNotificationConfig.prototype.create = function(callback) {
     var index = (data.TopicConfigurations || []).reduce(function(index, config, i) {
       if(!config.Filter || !config.Filter.Key || !config.Filter.Key.FilterRules)
         return index;
-      var prefix = config.Filter.Key..FilterRules.find(function(key) {
+      var prefix = config.Filter.Key.FilterRules.find(function(key) {
         return key.Name === 'Prefix';
       });
       index[prefix.Value] = i.toString();
@@ -115,4 +116,26 @@ S3BucketNotificationConfig.prototype.create = function(callback) {
 
     s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, callback);
   });
+}
+
+/**
+ * Update the notification configuration by removing it from the configuration and then creating it again
+ * @param {function} callback - a function to handle the response
+ */
+S3BucketNotificationConfig.prototype.update = function(callback) {
+  var remove = this.delete.bind(this);
+  var create = this.create.bind(this);
+
+  remove(function(err) {
+    if (err) return callback(err);
+    create(callback);
+  });
+}
+
+/**
+ * Delete the notification configuration
+ * @param {function} callback - a function to handle the response
+ */
+S3BucketNotificationConfig.prototype.delete = function(callback) {
+
 }
