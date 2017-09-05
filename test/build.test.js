@@ -25,7 +25,7 @@ test('[build] error scenarios', assert => {
       Handler: 'my.handler',
       Properties: { 
         SpotFleetRequestConfigData: { },
-        SpotFleetRegion: 'region'
+        Region: 'region'
       }
     });
   }, /Missing CustomResourceName/, 'missing CustomResourceName');
@@ -37,7 +37,7 @@ test('[build] error scenarios', assert => {
       Handler: 'my.handler',
       Properties: { 
         SpotFleetRequestConfigData: { },
-        SpotFleetRegion: 'region'
+        Region: 'region'
       }
     });
   }, /Missing LogicalName/, 'missing LogicalName');
@@ -51,7 +51,7 @@ test('[build] error scenarios', assert => {
       Handler: 'my.handler',
       Properties: { 
         SpotFleetRequestConfigData: { },
-        SpotFleetRegion: 'region'
+        Region: 'region'
       }
     });
   }, /Missing S3Bucket/, 'missing S3Bucket');
@@ -65,7 +65,7 @@ test('[build] error scenarios', assert => {
       Handler: 'my.handler',
       Properties: { 
         SpotFleetRequestConfigData: { },
-        SpotFleetRegion: 'region'
+        Region: 'region'
       }
     });
   }, /Missing S3Key/, 'missing S3Key');
@@ -91,6 +91,71 @@ test('[build] error scenarios', assert => {
     });
   }, /Missing Properties/, 'missing Properties');
 
+  // Test that you need Properties
+  assert.throws(() => {
+    build({
+      CustomResourceName: 'SpotFleet',
+      LogicalName: 'SpotFleetResource',
+      S3Key: 'lambda/code',
+      S3Bucket: 'code',
+      Handler: 'my.handler',
+      Properties: { 
+        Region: 'region'
+      }
+    });
+  }, /Missing SpotFleetRequestConfigData/, 'Missing SpotFleetRequestConfigData');
+
+  // Test that you need SpotFleetRequestConfigData.IamInstanceProfile
+  assert.throws(() => {
+    build({
+      CustomResourceName: 'SpotFleet',
+      LogicalName: 'SpotFleetResource',
+      S3Key: 'lambda/code',
+      S3Bucket: 'code',
+      Handler: 'my.handler',
+      Properties: { 
+        Region: 'region',
+        SpotFleetRequestConfigData: {}
+      }
+    });
+  }, /Missing LaunchSpecifications in SpotFleetRequestConfigData/, 'Missing LaunchSpecifications in SpotFleetRequestConfigData');
+
+  // Test that you need SpotFleetRequestConfigData.IamInstanceProfile
+  assert.throws(() => {
+    build({
+      CustomResourceName: 'SpotFleet',
+      LogicalName: 'SpotFleetResource',
+      S3Key: 'lambda/code',
+      S3Bucket: 'code',
+      Handler: 'my.handler',
+      Properties: { 
+        Region: 'region',
+        SpotFleetRequestConfigData: {
+          LaunchSpecifications: []
+        }
+      }
+    });
+  }, /Missing LaunchSpecifications\[0\] in SpotFleetRequestConfigData/, 'Missing LaunchSpecifications in SpotFleetRequestConfigData');
+
+  // Test that you need Properties
+  assert.throws(() => {
+    build({
+      CustomResourceName: 'SpotFleet',
+      LogicalName: 'SpotFleetResource',
+      S3Key: 'lambda/code',
+      S3Bucket: 'code',
+      Handler: 'my.handler',
+      Properties: { 
+        Region: 'region',
+        SpotFleetRequestConfigData: {
+          LaunchSpecifications: [{
+            IamInstanceProfile: 'cauliflower'
+          }]
+        }
+      }
+    });
+  }, /Missing IamFleetRole in SpotFleetRequestConfigData/, 'Missing IamFleetRole in SpotFleetRequestConfigData');
+
   assert.end();
 });
 
@@ -103,8 +168,24 @@ test('[build] success', assert => {
     S3Bucket: 'code',
     Handler: 'my.handler',
     Properties: { 
-      SpotFleetRequestConfigData: { },
-      SpotFleetRegion: 'region'
+      SpotFleetRequestConfigData: {
+        LaunchSpecifications: [
+          {
+            IamInstanceProfile: {'Arn': 'cauliflower'}
+          },
+          {
+            IamInstanceProfile: {'Arn': 'cauliflower2'}
+          },
+          {
+            IamInstanceProfile: {'Arn': 'cauliflower3'}
+          },
+          {
+            YeaNoProfile: 'cauliflower5'
+          }
+        ],
+        IamFleetRole: 'parsnips'
+      },
+      Region: 'region'
     }
   });
 
@@ -115,6 +196,10 @@ test('[build] success', assert => {
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Properties.Code.S3Bucket, 'code', 'S3Bucket is params.S3Bucket');
   assert.deepEquals(template.Resources.SpotFleetLogicalNameFunction.Properties.Code.S3Key, 'lambda/code', 'S3Key is params.S3Key');
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Properties.Handler, 'my.handler', 'Handler is params.Handler');
+
+  // Special spotfleet logic
+  assert.equals(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[2].Resource, 'parsnips'); 
+  assert.deepEqual(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[3].Resource,'cauliflower'); 
 
   assert.end();
 });
@@ -127,7 +212,12 @@ test('[build] success with Conditional', assert => {
     S3Bucket: 'code',
     Handler: 'my.handler',
     Properties: { 
-      SpotFleetRequestConfigData: { },
+      SpotFleetRequestConfigData: {
+        LaunchSpecifications: [{
+          IamInstanceProfile: 'cauliflower'
+        }],
+        IamFleetRole: 'parsnips'
+      },
       SpotFleetRegion: 'region'
     },
     Condition: 'Conditional'
