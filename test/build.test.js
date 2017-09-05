@@ -171,13 +171,13 @@ test('[build] success', assert => {
       SpotFleetRequestConfigData: {
         LaunchSpecifications: [
           {
-            IamInstanceProfile: 'cauliflower'
+            IamInstanceProfile: {'Arn': 'cauliflower'}
           },
           {
-            IamInstanceProfile: 'cauliflower2'
+            IamInstanceProfile: {'Arn': 'cauliflower2'}
           },
           {
-            IamInstanceProfile: 'cauliflower3'
+            IamInstanceProfile: {'Arn': 'cauliflower3'}
           },
           {
             YeaNoProfile: 'cauliflower5'
