@@ -126,7 +126,7 @@ const SpotFleet = magicCfnResources.build({
   Handler: 'spot-fleet.SpotFleet', // references the handler created in the repository
   Properties: {
     SpotFleetRequestConfigData: { }, // object with SpotFleet configuration specifics
-    SpotFleetRegion: 'region', // region of the SpotFleet i.e.: 'us-east-1'
+    Region: 'region', // region of the SpotFleet i.e.: 'us-east-1'
   },
   Condition: 'Condition' // the Logical ID of a condition
 });
