@@ -169,9 +169,17 @@ test('[build] success', assert => {
     Handler: 'my.handler',
     Properties: { 
       SpotFleetRequestConfigData: {
-        LaunchSpecifications: [{
-          IamInstanceProfile: 'cauliflower'
-        }],
+        LaunchSpecifications: [
+          {
+            IamInstanceProfile: 'cauliflower'
+          },
+          {
+            IamInstanceProfile: 'cauliflower2'
+          },
+          {
+            IamInstanceProfile: 'cauliflower3'
+          }
+        ],
         IamFleetRole: 'parsnips'
       },
       Region: 'region'
@@ -188,7 +196,7 @@ test('[build] success', assert => {
 
   // Special spotfleet logic
   assert.equals(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[2].Resource, 'parsnips'); 
-  assert.equals(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[3].Resource,'cauliflower'); 
+  assert.deepEqual(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[3].Resource,['cauliflower','cauliflower2','cauliflower3']); 
 
   assert.end();
 });
