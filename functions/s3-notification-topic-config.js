@@ -1,8 +1,8 @@
 var AWS = require('aws-sdk');
 var utils = require('../lib/utils');
 var Response = require('../lib/response');
-
-module.exports = S3BucketNotificationConfig;
+var deepEqual = require('deep-equal');
+module.exports = S3NotificationTopicConfig;
 
 /**
  * Represents an S3 Bucket Notification Configuration 
@@ -10,70 +10,78 @@ module.exports = S3BucketNotificationConfig;
  * @param {string} bucket - the S3 bucket to set notification configurations on
  * @param {string} bucketRegion - the region of the S3 bucket
  * @param {array} filters - an array of filtering rules https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
+ * @param {array} events - an array of events the topic will be notified on 
  */
-function S3BucketNotificationConfig(configType, endpoint, bucket, bucketRegion, filterRules, eventType){
-  if(!configType || !configType in new Set('TopicConfig', 'LambdaConfig', 'QueueConfig'))
-      throw new Error('Missing or invalid ConfigType')
+function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter){
   if(!snsTopicArn)
     throw new Error('Missing Parameter SnsTopicArn');
   if(!bucket)
     throw new Error('Missing Parameter Bucket');
   if(!bucketRegion)
     throw new Error('Missing Parameter BucketRegion');
-  if(!filters)
-    throw new Error('Missing Parameter Filters');
-  if(!Array.isArray(filters))
-    throw new Error('Filters must be an Array');
+  if(!eventTypes)
+    throw new Error('Missing Parameter Events');
+  if(!Array.isArray(eventTypes))
+    throw new Error('Events must be an Array');
+
   this.snsTopicArn = snsTopicArn;
   this.bucket = bucket;
   this.bucketRegion = bucketRegion;
-  this.filters = filters;
+  this.prefixFilter = (prefixFilter) ? prefixFilter : undefined;
+  this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
+  this.events = eventTypes;
   this.s3 = new AWS.S3({
     params: { Bucket: bucket },
-    region: region
+    region: bucketRegion
   });
 }
 
 /**
- * A Lambda function to manage an S3 Bucket Notification Configuration in response to a CloudFormation event.
+ * A Lambda function to manage an S3 Bucket Notification Topic Configuration in response to a CloudFormation event.
  * @static
  * @param {object} event - a Lambda invocation event sent from a custom CloudFormation resource
  * @param {object} context - the Lambda invocation context
  * @example
  * // a custom CloudFormation resource that is backed by this Lambda function must
  * // provide the ARN for this Lambda function, the ARN for an SNS topic, an
- * // S3 bucket name, the S3 bucket's region and an array of filters to filter which notifications the SNS topic will receive.
+ * // S3 bucket name, the S3 bucket's region, an array of filters to filter which notifications
+ * // the SNS topic will receive, and an array of events that the topic will be notified on.
  * {
- *   "Type": "Custom::S3BucketNotificationConfig",
+ *   "Type": "Custom::S3NotificationTopicConfig",
  *   "Properties": {
  *     "ServiceToken": "arn:aws:lambda:us-east-1:123456789012:function/s3-bucket-notification-config",
  *     "SnsTopicArn": "arn:aws:sns:us-east-1:123456789012:my-s3-bucket-notification-config",
  *     "S3BucketName": "bucket",
  *     "S3BucketRegion": "us-east-1",
- *     "Filters": [ {"Name": "Prefix", "Value: "prefix" }, {"Name": "Suffix", "Value": "jpg"}]
+ *     "PrefixFilter": "prefix",
+ *     "SuffixFilter": "jpg",
+ *     "Events": [ 's3:ObjectCreated:*']
  *   }
  * }
  */
 
- S3BucketNotificationConfig.manage = function(event, context) {
+ S3NotificationTopicConfig.manage = function(event, context) {
   if (!utils.validCloudFormationEvent(event))
     return context.done(null, 'ERROR: Invalid CloudFormation event');
   var response = new Response(event, context);
+
   var requestType = event.RequestType.toLowerCase();
-  var notificationConfig;
+  var topicConfig;
 
   try {
-    notificationConfig = new S3BucketNotificationConfig(
+    topicConfig = new S3NotificationTopicConfig(
       event.ResourceProperties.SnsTopicArn,
       event.ResourceProperties.Bucket,
       event.ResourceProperties.BucketRegion,
-      event.ResourceProperties.Filters
+      event.ResourceProperties.PrefixFilter,
+      event.ResourceProperties.SuffixFilter,
+      event.ResourceProperties.EventTypes
     );
   } catch (err) {
     return response.send(err);
   }
 
-  notificationConfig[requestType](function(err) {
+  topicConfig[requestType](function(err) {
     response.send(err);
   });
  }
@@ -82,35 +90,36 @@ function S3BucketNotificationConfig(configType, endpoint, bucket, bucketRegion, 
  * Create  the notification configuration
  * @param {function} callback - a function to handle the response
  */
-S3BucketNotificationConfig.prototype.create = function(callback) {
-  this.s3.getBucketNotificationConfiguration(function(err, data) {
+S3NotificationTopicConfig.prototype.create = function(callback) {
+  this.s3.getBuckettopicConfiguration(function(err, data) {
     if (err) return callback(err);
 
     var config = {
       TopicArn: this.snsTopicArn,
-      Events: ['s3:ObjectCreated:*'],
-      Filter: {
-        Key: {
-          FilterRules: this.filters
-        }
-      }
+      Events: this.eventTypes,
     };
 
-    var index = (data.TopicConfigurations || []).reduce(function(index, config, i) {
-      if(!config.Filter || !config.Filter.Key || !config.Filter.Key.FilterRules)
-        return index;
-      var prefix = config.Filter.Key.FilterRules.find(function(key) {
-        return key.Name === 'Prefix';
+    if(this.prefixFilter || this.suffixFilter) {
+      config.Filter= { Key: { FilterRules: [] } };
+      if(this.prefixFilter) config.Filter.Key.FilterRules.push({ Name: 'Prefix', Value: this.prefixFilter });
+      if(this.suffixFilter) config.Filter.Key.FilterRules.push({ Name: 'Suffix', Value: this.suffixFilter });
+    }
+
+    var existingConfig;
+    if (data.TopicConfigurations) {
+      data.TopicConfigurations.forEach((existing) {
+        if(config.TopicArn === existing.TopicArn &&
+           config.Events.concat().sort() === existing.Events.concat().sort() &&
+           deepEqual(config.Filter, existing.Filter)) {
+          existingConfig = true;
+          break; 
+        }
       });
-      index[prefix.Value] = i.toString();
-
-      return index;
-    }, {});
-
-    if (index[process.env.StackName]) {
-      data.TopicConfigurations.splice(Number(index[process.env.StackName]), 1, config);
-    } else {
-      data.TopicConfigurations = data.TopicConfigurations || [];
+      if(existingConfig) return callback('This topic configuration already exists');
+      data.TopicConfigurations.push(config);
+    }
+    else {
+      data.TopicConfigurations = [];
       data.TopicConfigurations.push(config);
     }
 
@@ -122,7 +131,7 @@ S3BucketNotificationConfig.prototype.create = function(callback) {
  * Update the notification configuration by removing it from the configuration and then creating it again
  * @param {function} callback - a function to handle the response
  */
-S3BucketNotificationConfig.prototype.update = function(callback) {
+S3NotificationTopicConfig.prototype.update = function(callback) {
   var remove = this.delete.bind(this);
   var create = this.create.bind(this);
 
@@ -136,6 +145,6 @@ S3BucketNotificationConfig.prototype.update = function(callback) {
  * Delete the notification configuration
  * @param {function} callback - a function to handle the response
  */
-S3BucketNotificationConfig.prototype.delete = function(callback) {
+S3NotificationTopicConfig.prototype.delete = function(callback) {
 
 }
