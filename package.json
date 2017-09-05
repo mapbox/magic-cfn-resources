@@ -26,12 +26,12 @@
   "homepage": "https://github.com/mapbox/magic-cfn-resources#readme",
   "devDependencies": {
     "@mapbox/mock-aws-sdk-js": "0.0.5",
-    "@mapbox/cloudfriend": "^1.8.1",
     "documentation": "^1.4.0",
     "eslint": "^1.4.1",
     "tape": "^4.0.0"
   },
   "dependencies": {
+    "@mapbox/cloudfriend": "^1.8.1",
     "aws-sdk": "^2.1.35"
   }
 }
