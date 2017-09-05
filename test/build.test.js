@@ -199,7 +199,7 @@ test('[build] success', assert => {
 
   // Special spotfleet logic
   assert.equals(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[2].Resource, 'parsnips'); 
-  assert.deepEqual(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[3].Resource,['cauliflower','cauliflower2','cauliflower3',{ Ref: 'AWS::NoValue' }]); 
+  assert.deepEqual(template.Resources.SpotFleetLogicalNameRole.Properties.Policies[0].PolicyDocument.Statement[3].Resource,'cauliflower'); 
 
   assert.end();
 });
