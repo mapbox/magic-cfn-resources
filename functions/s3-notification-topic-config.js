@@ -95,7 +95,7 @@ function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes
  * @param {function} callback - a function to handle the response
  */
 S3NotificationTopicConfig.prototype.create = function(callback) {
-  this.s3.getBuckettopicConfiguration(function(err, data) {
+  this.s3.getBucketNotificationConfiguration(function(err, data) {
     if (err) return callback(err);
 
     var config = {
@@ -146,9 +146,11 @@ S3NotificationTopicConfig.prototype.update = function(callback) {
 }
 
 /**
- * Delete the notification configuration
+ * Delete the topic notification configuration
  * @param {function} callback - a function to handle the response
  */
 S3NotificationTopicConfig.prototype.delete = function(callback) {
+  this.s3.getBucketNotificationConfiguration(function(err, data) {
 
+  });
 }
