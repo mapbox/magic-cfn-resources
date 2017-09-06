@@ -6,6 +6,7 @@ module.exports = S3NotificationTopicConfig;
 
 /**
  * Represents an S3 Bucket Notification Configuration 
+ * @param {string} Id - an Id to identify the notification config
  * @param {string} snsTopicArn - the ARN for the SNS topic to get bucket notifications
  * @param {string} bucket - the S3 bucket to set notification configurations on
  * @param {string} bucketRegion - the region of the S3 bucket
@@ -13,7 +14,9 @@ module.exports = S3NotificationTopicConfig;
  * @param {string} prefixFilter - string to filter prefixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
  * @param {string} suffixFilter - string to filter suffixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
  */
-function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter, oldResources){
+function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter, oldResourceId){
+  if(!Id)
+    throw new Error('Missing Parameter Id');
   if(!snsTopicArn)
     throw new Error('Missing Parameter SnsTopicArn');
   if(!bucket)
@@ -25,13 +28,14 @@ function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes
   if(!Array.isArray(eventTypes))
     throw new Error('Events must be an Array');
 
+  this.id = Id;
   this.snsTopicArn = snsTopicArn;
   this.bucket = bucket;
   this.bucketRegion = bucketRegion;
   this.prefixFilter = (prefixFilter) ? prefixFilter : undefined;
   this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
   this.events = eventTypes;
-  if (oldResources) this.oldResources = oldResources;
+  if (oldResourceId) this.oldId = oldResourceId;
 
   this.s3 = new AWS.S3({
     params: { Bucket: bucket },
@@ -73,13 +77,14 @@ function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes
 
   try {
     topicConfig = new S3NotificationTopicConfig(
+      event.ResourceProperties.Id,
       event.ResourceProperties.SnsTopicArn,
       event.ResourceProperties.Bucket,
       event.ResourceProperties.BucketRegion,
+      event.ResourceProperties.EventTypes,
       event.ResourceProperties.PrefixFilter,
       event.ResourceProperties.SuffixFilter,
-      event.ResourceProperties.EventTypes,
-      event.OldResourceProperties ? event.OldResourceProperties : undefined
+      event.OldResourceProperties ? event.OldResourceProperties.Id : undefined
     );
   } catch (err) {
     return response.send(err);
@@ -109,12 +114,27 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
       if(this.suffixFilter) config.Filter.Key.FilterRules.push({ Name: 'Suffix', Value: this.suffixFilter });
     }
 
+    // var existingConfig;
+    // if (data.TopicConfigurations) {
+    //   data.TopicConfigurations.forEach((existing) {
+    //     if(config.TopicArn === existing.TopicArn &&
+    //        config.Events.concat().sort() === existing.Events.concat().sort() &&
+    //        deepEqual(config.Filter, existing.Filter)) {
+    //       existingConfig = true;
+    //       break; 
+    //     }
+    //   });
+    // }
+    // else {
+    //   data.TopicConfigurations = [];
+    // }
+
+    // if(existingConfig) return callback('This topic configuration already exists');
+    
     var existingConfig;
     if (data.TopicConfigurations) {
       data.TopicConfigurations.forEach((existing) {
-        if(config.TopicArn === existing.TopicArn &&
-           config.Events.concat().sort() === existing.Events.concat().sort() &&
-           deepEqual(config.Filter, existing.Filter)) {
+        if(this.id === existing.Id) {
           existingConfig = true;
           break; 
         }
@@ -125,7 +145,7 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
     }
 
     if(existingConfig) return callback('This topic configuration already exists');
-    
+
     data.TopicConfigurations.push(config);
     s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, callback);
   });
@@ -151,6 +171,20 @@ S3NotificationTopicConfig.prototype.update = function(callback) {
  */
 S3NotificationTopicConfig.prototype.delete = function(callback) {
   this.s3.getBucketNotificationConfiguration(function(err, data) {
+    var toDeleteId = this.oldId || this.id;
+    if(!data.TopicConfigurations) return callback();
 
+    var existingConfigIdx;
+    data.TopicConfigurations.forEach((existing, idx) {
+      if(this.id === existing.Id) {
+        existingConfigIdx = idx;
+        break; 
+      }
+    });
+
+    if(!existingConfigIdx) return callback();
+    data.TopicConfigurations.splice(existingConfigIdx, 1);
+
+    this.s3.putBucketNotificationConfiguration( { NotificationConfiguration: data}, callback);
   });
 }
