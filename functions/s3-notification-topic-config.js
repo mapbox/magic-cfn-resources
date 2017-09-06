@@ -9,10 +9,11 @@ module.exports = S3NotificationTopicConfig;
  * @param {string} snsTopicArn - the ARN for the SNS topic to get bucket notifications
  * @param {string} bucket - the S3 bucket to set notification configurations on
  * @param {string} bucketRegion - the region of the S3 bucket
- * @param {array} filters - an array of filtering rules https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
  * @param {array} events - an array of events the topic will be notified on 
+ * @param {string} prefixFilter - string to filter prefixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
+ * @param {string} suffixFilter - string to filter suffixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
  */
-function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter){
+function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter, oldResources){
   if(!snsTopicArn)
     throw new Error('Missing Parameter SnsTopicArn');
   if(!bucket)
@@ -30,6 +31,8 @@ function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes
   this.prefixFilter = (prefixFilter) ? prefixFilter : undefined;
   this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
   this.events = eventTypes;
+  if (oldResources) this.oldResources = oldResources;
+
   this.s3 = new AWS.S3({
     params: { Bucket: bucket },
     region: bucketRegion
@@ -75,7 +78,8 @@ function S3NotificationTopicConfig(snsTopicArn, bucket, bucketRegion, eventTypes
       event.ResourceProperties.BucketRegion,
       event.ResourceProperties.PrefixFilter,
       event.ResourceProperties.SuffixFilter,
-      event.ResourceProperties.EventTypes
+      event.ResourceProperties.EventTypes,
+      event.OldResourceProperties ? event.OldResourceProperties : undefined
     );
   } catch (err) {
     return response.send(err);
@@ -115,14 +119,14 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
           break; 
         }
       });
-      if(existingConfig) return callback('This topic configuration already exists');
-      data.TopicConfigurations.push(config);
     }
     else {
       data.TopicConfigurations = [];
-      data.TopicConfigurations.push(config);
     }
 
+    if(existingConfig) return callback('This topic configuration already exists');
+    
+    data.TopicConfigurations.push(config);
     s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, callback);
   });
 }
