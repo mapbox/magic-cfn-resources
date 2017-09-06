@@ -56,6 +56,7 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
  * {
  *   "Type": "Custom::S3NotificationTopicConfig",
  *   "Properties": {
+ *     "Id": "name of subscription"
  *     "ServiceToken": "arn:aws:lambda:us-east-1:123456789012:function/s3-bucket-notification-config",
  *     "SnsTopicArn": "arn:aws:sns:us-east-1:123456789012:my-s3-bucket-notification-config",
  *     "S3BucketName": "bucket",
