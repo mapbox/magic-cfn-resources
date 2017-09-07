@@ -204,31 +204,6 @@ test('[build] success', assert => {
   assert.end();
 });
 
-test('[build] success on SnsSubscription', assert => {
-  const template = build({
-    CustomResourceName: 'SnsSubscription',
-    LogicalName: 'SnsSubscriptionLogicalName',
-    S3Key: 'lambda/code',
-    S3Bucket: 'code',
-    Handler: 'my.handler',
-    Properties: { 
-      Protocol: 'email',
-      TopicArn: 'arn:aws:sns:us-east-1:special-topic',
-      Endpoint: 'someone@mapbox.com'
-    }
-  });
-
-  assert.deepEquals(Object.keys(template.Resources), ['SnsSubscriptionLogicalNameRole', 'SnsSubscriptionLogicalNameFunction', 'SnsSubscriptionLogicalName'], 'role, function, and custom resource use logical name');
-  assert.equals(template.Resources.SnsSubscriptionLogicalNameRole.Type, 'AWS::IAM::Role', 'Type is AWS::IAM::Role');
-  assert.equals(template.Resources.SnsSubscriptionLogicalNameFunction.Type, 'AWS::Lambda::Function', 'Type is AWS::Lambda::Function');
-
-  assert.equals(template.Resources.SnsSubscriptionLogicalNameFunction.Properties.Code.S3Bucket, 'code', 'S3Bucket is params.S3Bucket');
-  assert.deepEquals(template.Resources.SnsSubscriptionLogicalNameFunction.Properties.Code.S3Key, 'lambda/code', 'S3Key is params.S3Key');
-  assert.equals(template.Resources.SnsSubscriptionLogicalNameFunction.Properties.Handler, 'my.handler', 'Handler is params.Handler');
-
-  assert.end();
-});
-
 test('[build] success with Conditional', assert => {
   var params = {
     CustomResourceName: 'SpotFleet',
@@ -251,6 +226,6 @@ test('[build] success with Conditional', assert => {
   assert.equals(template.Resources.SpotFleetLogicalNameRole.Condition, 'Conditional', 'Conditional in Role');
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Condition, 'Conditional', 'Conditional in Function');
   assert.equals(template.Resources.SpotFleetLogicalName.Condition, 'Conditional', 'Conditional in Custom Resource');
-  assert.deepEqual(template.Resources.SpotFleetLogicalName.Type, { 'Fn::Join': [ '', [ 'Custom::', params.CustomResourceName ] ] }, 'Type equals Custom::params.CustomResourceName');  
+  assert.deepEqual(template.Resources.SpotFleetLogicalName.Type,'Custom::'+params.CustomResourceName, 'Type equals Custom::params.CustomResourceName');  
   assert.end();
 })
