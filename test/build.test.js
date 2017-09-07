@@ -205,7 +205,7 @@ test('[build] success', assert => {
 });
 
 test('[build] success with Conditional', assert => {
-  const template =  build({
+  var params = {
     CustomResourceName: 'SpotFleet',
     LogicalName: 'SpotFleetLogicalName',
     S3Key: 'lambda/code',
@@ -221,9 +221,11 @@ test('[build] success with Conditional', assert => {
       SpotFleetRegion: 'region'
     },
     Condition: 'Conditional'
-  });
+  };
+  const template =  build(params);
   assert.equals(template.Resources.SpotFleetLogicalNameRole.Condition, 'Conditional', 'Conditional in Role');
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Condition, 'Conditional', 'Conditional in Function');
   assert.equals(template.Resources.SpotFleetLogicalName.Condition, 'Conditional', 'Conditional in Custom Resource');
+  assert.deepEqual(template.Resources.SpotFleetLogicalName.Type, { 'Fn::Join': [ '', [ 'Custom::', 'SpotFleet' ] ] }, 'Type equals Custom::params.CustomResourceName');  
   assert.end();
 })
