@@ -227,5 +227,6 @@ test('[build] success with Conditional', assert => {
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Condition, 'Conditional', 'Conditional in Function');
   assert.equals(template.Resources.SpotFleetLogicalName.Condition, 'Conditional', 'Conditional in Custom Resource');
   assert.deepEqual(template.Resources.SpotFleetLogicalName.Type,'Custom::'+params.CustomResourceName, 'Type equals Custom::params.CustomResourceName');  
+  assert.ok( typeof template.Resources.SpotFleetLogicalName.Type === 'string', 'Resource Type name is a string');
   assert.end();
 })
