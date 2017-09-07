@@ -134,12 +134,13 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
     
     var existingConfig;
     if (data.TopicConfigurations) {
-      data.TopicConfigurations.forEach((existing) {
-        if(this.id === existing.Id) {
-          existingConfig = true;
-          break; 
+      var existingConfigIdx;
+      for(var idx = 0; idx < data.TopicConfigurations.length; idx++) {
+        if(this.id === data.TopicConfigurations[idx].Id) {
+          existingConfigIdx = true;
+          break;
         }
-      });
+      }
     }
     else {
       data.TopicConfigurations = [];
@@ -176,12 +177,12 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
     if(!data.TopicConfigurations) return callback();
 
     var existingConfigIdx;
-    data.TopicConfigurations.forEach((existing, idx) {
-      if(this.id === existing.Id) {
+    for(var idx = 0; idx < data.TopicConfigurations.length; idx++) {
+      if(this.id === data.TopicConfigurations[idx].Id) {
         existingConfigIdx = idx;
-        break; 
+        break;
       }
-    });
+    }
 
     if(!existingConfigIdx) return callback();
     data.TopicConfigurations.splice(existingConfigIdx, 1);
