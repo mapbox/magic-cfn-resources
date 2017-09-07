@@ -226,6 +226,6 @@ test('[build] success with Conditional', assert => {
   assert.equals(template.Resources.SpotFleetLogicalNameRole.Condition, 'Conditional', 'Conditional in Role');
   assert.equals(template.Resources.SpotFleetLogicalNameFunction.Condition, 'Conditional', 'Conditional in Function');
   assert.equals(template.Resources.SpotFleetLogicalName.Condition, 'Conditional', 'Conditional in Custom Resource');
-  assert.deepEqual(template.Resources.SpotFleetLogicalName.Type, { 'Fn::Join': [ '', [ 'Custom::', 'SpotFleet' ] ] }, 'Type equals Custom::params.CustomResourceName');  
+  assert.deepEqual(template.Resources.SpotFleetLogicalName.Type, { 'Fn::Join': [ '', [ 'Custom::', params.CustomResourceName ] ] }, 'Type equals Custom::params.CustomResourceName');  
   assert.end();
 })
