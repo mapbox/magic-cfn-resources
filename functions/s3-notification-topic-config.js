@@ -114,23 +114,6 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
       if(this.prefixFilter) config.Filter.Key.FilterRules.push({ Name: 'Prefix', Value: this.prefixFilter });
       if(this.suffixFilter) config.Filter.Key.FilterRules.push({ Name: 'Suffix', Value: this.suffixFilter });
     }
-
-    // var existingConfig;
-    // if (data.TopicConfigurations) {
-    //   data.TopicConfigurations.forEach((existing) {
-    //     if(config.TopicArn === existing.TopicArn &&
-    //        config.Events.concat().sort() === existing.Events.concat().sort() &&
-    //        deepEqual(config.Filter, existing.Filter)) {
-    //       existingConfig = true;
-    //       break; 
-    //     }
-    //   });
-    // }
-    // else {
-    //   data.TopicConfigurations = [];
-    // }
-
-    // if(existingConfig) return callback('This topic configuration already exists');
     
     var existingConfig;
     if (data.TopicConfigurations) {
