@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/magic-cfn-resources",
-  "version": "1.2.62",
+  "version": "1.2.63",
   "description": "Build Lambda-backed custom CloudFormation resources",
   "main": "index.js",
   "directories": {
