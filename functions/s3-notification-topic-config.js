@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk');
 var utils = require('../lib/utils');
 var Response = require('../lib/response');
-var deepEqual = require('deep-equal');
+
 module.exports = S3NotificationTopicConfig;
 
 /**
