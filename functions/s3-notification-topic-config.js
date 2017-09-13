@@ -14,7 +14,7 @@ module.exports = S3NotificationTopicConfig;
 * @param {string} prefixFilter - string to filter prefixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
 * @param {string} suffixFilter - string to filter suffixes on (optional) https://docs.aws.amazon.com/AmazonS3/latest/dev/NotificationHowTo.html#notification-how-to-filtering
 */
-function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter, oldResourceId){
+function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventTypes, prefixFilter, suffixFilter, oldResources){
   if(!Id)
     throw new Error('Missing Parameter Id');
   if(!snsTopicArn)
@@ -36,11 +36,18 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
   this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
   this.events = eventTypes;
   if (oldResourceId) this.oldId = oldResourceId;
+  if (oldResources) this.oldBucket = oldResources.Bucket;
+  if (oldResources) this.oldBucketRegion = oldResources.BucketRegion;
 
   this.s3 = new AWS.S3({
     params: { Bucket: bucket },
     region: bucketRegion
   });
+
+  this.olds3 = (oldResources) ? new AWS.S3({
+    params: { Bucket: oldResources.Bucket },
+    region: oldResources.BucketRegion
+  }) : undefined;
 }
 
 /**
@@ -85,7 +92,7 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
       event.ResourceProperties.EventTypes,
       event.ResourceProperties.PrefixFilter,
       event.ResourceProperties.SuffixFilter,
-      event.OldResourceProperties ? event.OldResourceProperties.Id : undefined
+      event.OldResourceProperties ? event.OldResourceProperties : undefined
     );
   } catch (err) {
     return response.send(err);
@@ -166,7 +173,7 @@ S3NotificationTopicConfig.prototype.update = function(callback) {
  * @param {function} callback - a function to handle the response
  */
 S3NotificationTopicConfig.prototype.delete = function(callback) {
-  var s3 = this.s3;
+  var s3 = this.olds3 || this.s3;
   var toDeleteId = this.oldId || this.id;
 
   s3.getBucketNotificationConfiguration(function(err, data) {
