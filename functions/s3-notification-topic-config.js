@@ -150,7 +150,10 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
     else {
       data.TopicConfigurations.push(config);
     }
-    s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, callback);
+    s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, (err) => {
+      if (err) return callback(err);
+      callback();
+    });
   });
 }
 
@@ -177,6 +180,7 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
   var toDeleteId = this.oldId || this.id;
 
   s3.getBucketNotificationConfiguration(function(err, data) {
+    if(err) return callback(err);
     if(!data.TopicConfigurations) return callback();
 
     var existingConfigIdx;
@@ -192,6 +196,7 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
 
     s3.putBucketNotificationConfiguration( { NotificationConfiguration: data}, (err) => {
       if (err) return callback(err);
+      callback();
     });
   });
 }
