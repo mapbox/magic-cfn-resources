@@ -97,8 +97,9 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
   } catch (err) {
     return response.send(err);
   }
-
+  console.log('i am past initiation');
   topicConfig[requestType](function(err) {
+    console.log(err);
     response.send(err);
   });
  }
@@ -151,6 +152,7 @@ S3NotificationTopicConfig.prototype.create = function(callback) {
       data.TopicConfigurations.push(config);
     }
     s3.putBucketNotificationConfiguration({ NotificationConfiguration: data }, (err) => {
+      console.log(err);
       if (err) return callback(err);
       callback();
     });
@@ -182,7 +184,8 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
   s3.getBucketNotificationConfiguration(function(err, data) {
     if(err) return callback(err);
     if(!data.TopicConfigurations) return callback();
-
+    console.log('get past no TopicConfigurations');
+    
     var existingConfigIdx;
     for(var idx = 0; idx < data.TopicConfigurations.length; idx++) {
       if(this.id === data.TopicConfigurations[idx].Id) {

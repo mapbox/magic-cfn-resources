@@ -1,6 +1,6 @@
 {
   "name": "@mapbox/magic-cfn-resources",
-  "version": "1.2.66",
+  "version": "1.2.67",
   "description": "Build Lambda-backed custom CloudFormation resources",
   "main": "index.js",
   "directories": {
@@ -32,7 +32,6 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1.35",
-    "@mapbox/cloudfriend": "^1.8.1",
-    "aws-sdk": "^2.1.35"
+    "@mapbox/cloudfriend": "^1.8.1"
   }
 }
