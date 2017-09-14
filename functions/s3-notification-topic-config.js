@@ -191,7 +191,7 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
     data.TopicConfigurations.splice(existingConfigIdx, 1);
 
     s3.putBucketNotificationConfiguration( { NotificationConfiguration: data}, (err) => {
-      callback(err);
+      if (err) return callback(err);
     });
   });
 }
