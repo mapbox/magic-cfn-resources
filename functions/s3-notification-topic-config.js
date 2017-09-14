@@ -35,7 +35,7 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
   this.prefixFilter = (prefixFilter) ? prefixFilter : undefined;
   this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
   this.events = eventTypes;
-  if (oldResourcees) this.oldId = oldResourceId;
+  if (oldResources) this.oldId = oldResources.Id;
   if (oldResources) this.oldBucket = oldResources.Bucket;
   if (oldResources) this.oldBucketRegion = oldResources.BucketRegion;
 
@@ -185,7 +185,7 @@ S3NotificationTopicConfig.prototype.delete = function(callback) {
     if(err) return callback(err);
     if(!data.TopicConfigurations) return callback();
     console.log('get past no TopicConfigurations');
-    
+
     var existingConfigIdx;
     for(var idx = 0; idx < data.TopicConfigurations.length; idx++) {
       if(this.id === data.TopicConfigurations[idx].Id) {
