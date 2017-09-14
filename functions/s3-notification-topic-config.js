@@ -35,7 +35,7 @@ function S3NotificationTopicConfig(Id, snsTopicArn, bucket, bucketRegion, eventT
   this.prefixFilter = (prefixFilter) ? prefixFilter : undefined;
   this.suffixFilter = (suffixFilter) ? suffixFilter: undefined;
   this.events = eventTypes;
-  if (oldResourceId) this.oldId = oldResourceId;
+  if (oldResourcees) this.oldId = oldResourceId;
   if (oldResources) this.oldBucket = oldResources.Bucket;
   if (oldResources) this.oldBucketRegion = oldResources.BucketRegion;
 
