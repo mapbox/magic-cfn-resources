@@ -36,6 +36,21 @@ You can access the values of the stack's outputs with `Fn::GetAtt`
 
 Makes [SpotFleet requests](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-fleet-requests.html).
 
+### DefaultVpc
+
+Looks up the default VPC in the region you've launched your stack in, and provides information about the VPC via `Fn::GetAtt`.
+
+```json
+{ "Fn::GetAtt": ["LogicalNameOfYourCustomResource", "VpcId"] }
+```
+
+You can use `Fn::GetAtt` to obtain the following data:
+
+- VpcId: the default VPC's ID
+- AvailabilityZones: an array of strings representing the VPC's availability zones
+- AvailabilityZoneCount: the number of availability zones
+- PublicSubnets: an array of strings representing the VPC's public subnets
+- RouteTable: the ID for the first route table in the VPC
 
 ## To create a magical resource in your own CloudFormation template:
 #### In an existing script or in a new script (i.e. `sns-subscription.js`):
@@ -114,6 +129,19 @@ const SpotFleet = magicCfnResources.build({
   }
 });
 ```
+
+*DefaultVpc*
+```js
+const DefaultVpd = magicCfnResources.build({
+  CustomResourceName: 'DefaultVpc',
+  LogicalName: 'Logical Name', // a name to refer to the custom resource being built
+  S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
+  S3Key: 'Key', // the S3 key for where the handler lives
+  Handler: 'index.DefaultVpc', // references the handler created in the repository
+  Properties: {}
+});
+```
+
 #### Optional Condition
 A [Condition](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/conditions-section-structure.html) from your template can also be passed into `build`.
 i.e.:
