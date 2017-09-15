@@ -63,7 +63,6 @@ SnsSubscription.manage = function(event, context) {
   } catch (err) {
     return response.send(err);
   }
-  console.log('past sns initialization');
   subscription[requestType](function(err) {
     response.send(err);
   });
@@ -79,7 +78,6 @@ SnsSubscription.prototype.create = function(callback) {
     TopicArn: this.snsTopicArn,
     Endpoint: this.endpoint
   };
-  console.log('in create');
   this.sns.subscribe(params, callback);
 };
 
