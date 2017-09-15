@@ -63,14 +63,13 @@ SnsSubscription.manage = function(event, context) {
   } catch (err) {
     return response.send(err);
   }
-
   subscription[requestType](function(err) {
     response.send(err);
   });
 };
 
 /**
- * Create a the subscription
+ * Create  the subscription
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.create = function(callback) {
@@ -79,12 +78,11 @@ SnsSubscription.prototype.create = function(callback) {
     TopicArn: this.snsTopicArn,
     Endpoint: this.endpoint
   };
-
   this.sns.subscribe(params, callback);
 };
 
 /**
- * Update a the subscription by unsubscribing an old endpoint and subscribing a new one
+ * Update the subscription by unsubscribing an old endpoint and subscribing a new one
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.update = function(callback) {
@@ -98,7 +96,7 @@ SnsSubscription.prototype.update = function(callback) {
 };
 
 /**
- * Delete a the subscription
+ * Delete the subscription
  * @param {function} callback - a function to handle the response
  */
 SnsSubscription.prototype.delete = function(callback) {
