@@ -232,7 +232,7 @@ test('[build] success on SnsSubscription', assert => {
 });    
 
 test('[build] success with Conditional', assert => {
-  var params = {
+  const params = {
     CustomResourceName: 'SpotFleet',
     LogicalName: 'SpotFleetLogicalName',
     S3Key: 'lambda/code',
@@ -257,3 +257,25 @@ test('[build] success with Conditional', assert => {
   assert.ok( typeof template.Resources.SpotFleetLogicalName.Type === 'string', 'Resource Type name is a string');
   assert.end();
 })
+
+test('[build] success with other resources for S3NotificationTopicConfig', assert => {
+  const params = {
+    CustomResourceName: 'S3NotificationTopicConfig',
+    LogicalName: 'S3TopicConfig',
+    S3Bucket: 'code',
+    S3Key: 'lambda/code',
+    Handler: 'my.handler',
+    Properties: {
+      Id: 'test-config',
+      SnsTopicArn: 'arn:aws:sns:us-east-1:special-topic',
+      Bucket: 'test-bucket',
+      BucketRegion: 'us-east-1',
+      EventTypes: ['s3:ObjectCreated:*'],
+      BucketNotificationResources: [ 'arn:aws:s3:::test-bucket' ]
+    }
+  };
+
+  const template = build(params);
+  assert.ok(template.Resources.hasOwnProperty('S3TopicConfigSnsPolicy'), 'an SNS Policy is part of the resources built');
+  assert.end();
+});
