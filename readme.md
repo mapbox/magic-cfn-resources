@@ -162,7 +162,8 @@ const S3TopicConfig = magicCfnResources.build({
     EventTypes: ['s3:ObjectCreated:*'], // the types of event to notify about
     Prefix: 'prefix', // a prefix to filter notifications on (optional)
     Suffix: '.jpg', // a suffix to filter notifications on (optional)
-    BucketNotificationResources: [ 'bucket Arn' ] // if Bucket permissions need to be scoped, default is access to all resources
+    BucketNotificationResources: [ 'bucket Arn' ] 
+    // if Bucket permissions need to be scoped, default is access to all resources (optional)
   } 
 });
 ```
