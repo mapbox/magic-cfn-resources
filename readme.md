@@ -52,6 +52,10 @@ You can use `Fn::GetAtt` to obtain the following data:
 - PublicSubnets: an array of strings representing the VPC's public subnets
 - RouteTable: the ID for the first route table in the VPC
 
+### S3NotificationTopicConfig
+
+Creates a notification topic configuration on an S3 bucket.
+
 ## To create a magical resource in your own CloudFormation template:
 #### In an existing script or in a new script (i.e. `sns-subscription.js`):
 ```js
@@ -139,6 +143,27 @@ const DefaultVpd = magicCfnResources.build({
   S3Key: 'Key', // the S3 key for where the handler lives
   Handler: 'index.DefaultVpc', // references the handler created in the repository
   Properties: {}
+});
+```
+
+*S3NotificationTopicConfig*
+```js
+const S3TopicConfig = magicCfnResources.build({
+  CustomResourceName: 'S3NotificationTopicConfig',
+  LogicalName: 'Logical Name', // a name to refer to the custom resource being built
+  S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
+  S3Key: 'Key', // the S3 key for where the handler lives
+  Handler: 'index.DefaultVpc', // references the handler created in the repository
+  Properties: {
+    Id: 'notif-id', // an id to identify your notification config
+    SnsTopicArn: 'topic arn', // topic arn to subscribe (must be in the same region as bucket)
+    Bucket: 'bucket name', // name of bucket configuration is placed on,
+    BucketRegion: 'us-east-1', // the region the bucket is in
+    EventTypes: ['s3:ObjectCreated:*'], // the types of event to notify about
+    Prefix: 'prefix', // a prefix to filter notifications on (optional)
+    Suffix: '.jpg', // a suffix to filter notifications on (optional)
+    BucketNotificationResources: [ 'bucket Arn' ] // if Bucket permissions need to be scoped, default is access to all resources
+  } 
 });
 ```
 
