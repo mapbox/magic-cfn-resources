@@ -1,3 +1,7 @@
+### 1.5.1
+
+Make the cfn china-safe.
+
 ### 1.4.0
 
 Added `s3-notification-topic-config` resource. Also added a `moreResources` function to `/lib/build.js` for resources that require additional resources.
