@@ -26,8 +26,9 @@ test('[default VPC] success', (assert) => {
   AWS.stub('EC2', 'describeSubnets', function() {
     this.request.promise.returns(Promise.resolve({
       Subnets: [
-        { SubnetId: 'a', AvailabilityZone: '1a' },
-        { SubnetId: 'b', AvailabilityZone: '1b' }
+        { SubnetId: 'a', AvailabilityZone: '1a', MapPublicIpOnLaunch: true },
+        { SubnetId: 'b', AvailabilityZone: '1b', MapPublicIpOnLaunch: true },
+        { SubnetId: 'c', AvailabilityZone: '1c', MapPublicIpOnLaunch: false }
       ]
     }));
   });
