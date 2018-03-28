@@ -1,3 +1,7 @@
+### 1.5.2
+
+Stop exporting non-public subnets in default-vpc `PublicSubnets`.
+
 ### 1.5.1
 
 Make the cfn china-safe.
