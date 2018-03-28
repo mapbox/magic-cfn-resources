@@ -22,7 +22,7 @@ module.exports = function(event, context) {
       ec2.describeRouteTables({ Filters: [{ Name: 'vpc-id', Values: [info.VpcId] }] }).promise()
     ]);
   }).then((results) => {
-    let publicSubnets = results[0].Subnets.filter((subnet) => subnet.MapPublicIpOnLaunch);
+    var publicSubnets = results[0].Subnets.filter((subnet) => subnet.MapPublicIpOnLaunch);
 
     info.AvailabilityZones = publicSubnets.map((subnet) => subnet.AvailabilityZone);
     info.AvailabilityZoneCount = publicSubnets.length;
