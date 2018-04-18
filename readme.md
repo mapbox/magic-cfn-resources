@@ -160,8 +160,8 @@ const S3TopicConfig = magicCfnResources.build({
     Bucket: 'bucket name', // name of bucket configuration is placed on,
     BucketRegion: 'us-east-1', // the region the bucket is in
     EventTypes: ['s3:ObjectCreated:*'], // the types of event to notify about
-    Prefix: 'prefix', // a prefix to filter notifications on (optional)
-    Suffix: '.jpg', // a suffix to filter notifications on (optional)
+    PrefixFilter: 'prefix', // a prefix to filter notifications on (optional)
+    SuffixFilter: '.jpg', // a suffix to filter notifications on (optional)
     BucketNotificationResources: [ 'bucket Arn' ] 
     // if Bucket permissions need to be scoped, default is access to all resources (optional)
   } 
