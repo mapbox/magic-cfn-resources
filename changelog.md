@@ -1,3 +1,11 @@
+### 1.5.4
+
+Fixed the readme to show that you can add `PrefixFilter` and `SuffixFilter` to your s3NotificationTopicConfig.
+
+### 1.5.3
+
+ES6 changes.
+
 ### 1.5.2
 
 Stop exporting non-public subnets in default-vpc `PublicSubnets`.
