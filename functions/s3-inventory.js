@@ -14,6 +14,9 @@ function S3Inventory(Bucket, BucketRegion, Id, InventoryConfiguration, OldId) {
   if (!InventoryConfiguration)
     throw new Error('Missing Parameter InventoryConfiguration');
 
+  InventoryConfiguration.IsEnabled = InventoryConfiguration.IsEnabled === 'true'
+    ? true : false;
+
   this.s3 = new AWS.S3({ region: BucketRegion });
   this.params = { Bucket, Id, InventoryConfiguration };
 

@@ -20,7 +20,7 @@ test('[s3-inventory] constructor', (assert) => {
   assert.deepEqual(newInv.params, {
     Bucket: 'bucket',
     Id: 'id',
-    InventoryConfiguration: {}
+    InventoryConfiguration: { IsEnabled: false }
   }, 'sets properties for create');
 
   assert.equal(updateInv.oldId, 'old', 'update sets oldId property when intention is to create a new inventory');
@@ -40,7 +40,7 @@ test('[s3-inventory] create', (assert) => {
     assert.equal(id, 'id', 'returns id');
 
     assert.ok(put.calledWith({
-      Bucket: 'bucket', Id: 'id', InventoryConfiguration: {}
+      Bucket: 'bucket', Id: 'id', InventoryConfiguration: { IsEnabled: false }
     }), 'called API with expected parameters');
 
     AWS.S3.restore();
@@ -59,7 +59,7 @@ test('[s3-inventory] update', (assert) => {
     assert.equal(id, 'id', 'returns new id');
 
     assert.ok(put.calledWith({
-      Bucket: 'bucket', Id: 'id', InventoryConfiguration: {}
+      Bucket: 'bucket', Id: 'id', InventoryConfiguration: { IsEnabled: false }
     }), 'called put API with expected parameters');
 
     assert.ok(del.calledWith({
