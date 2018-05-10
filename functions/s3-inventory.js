@@ -50,7 +50,7 @@ S3Inventory.manage = function(event, context, callback) {
 S3Inventory.prototype.create = function(callback) {
   const id = this.params.Id;
   this.s3.putBucketInventoryConfiguration(this.params, function(err) {
-    if (err) return callback(err);
+    if (err) console.log(err);
     callback(null, id);
   });
 };
@@ -68,7 +68,7 @@ S3Inventory.prototype.update = function(callback) {
       Bucket: bucket,
       Id: old
     }, function (err) {
-      if (err) return callback(err);
+      if (err) console.log(err);
       callback(null, id);
     });
 
@@ -80,7 +80,7 @@ S3Inventory.prototype.delete = function(callback) {
     Bucket: this.params.Bucket,
     Id: this.params.Id
   }, function(err) {
-    if (err) return callback(err);
+    if (err) console.log(err);
     callback();
   });
 };
