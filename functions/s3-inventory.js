@@ -43,6 +43,8 @@ S3Inventory.manage = function(event, context, callback) {
     return response.send(err);
   }
 
+  console.log(`${requestType} ${event.ResourceProperties.Bucket}:${event.ResourceProperties.Id}`);
+
   s3Inventory[requestType](function(err, physicalId) {
     if (err) return response.send(err);
     if (physicalId) response.setId(physicalId);
@@ -51,9 +53,13 @@ S3Inventory.manage = function(event, context, callback) {
 }
 
 S3Inventory.prototype.create = function(callback) {
+  const bucket = this.params.Bucket;
   const id = this.params.Id;
   this.s3.putBucketInventoryConfiguration(this.params, function(err) {
     if (err) console.log(err);
+
+    console.log(`created ${bucket}:${id}`);
+
     callback(null, id);
   });
 };
@@ -72,6 +78,9 @@ S3Inventory.prototype.update = function(callback) {
       Id: old
     }, function (err) {
       if (err) console.log(err);
+
+      console.log(`deleted ${bucket}:${old}`);
+
       callback(null, id);
     });
 
@@ -79,11 +88,17 @@ S3Inventory.prototype.update = function(callback) {
 };
 
 S3Inventory.prototype.delete = function(callback) {
+  const bucket = this.params.Bucket;
+  const id = this.params.Id;
+
   this.s3.deleteBucketInventoryConfiguration({
-    Bucket: this.params.Bucket,
-    Id: this.params.Id
+    Bucket: bucket,
+    Id: id
   }, function(err) {
     if (err) console.log(err);
+
+    console.log(`deleted ${bucket}:${id}`);
+
     callback();
   });
 };
