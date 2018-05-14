@@ -56,7 +56,7 @@ S3Inventory.prototype.create = function(callback) {
   const bucket = this.params.Bucket;
   const id = this.params.Id;
   this.s3.putBucketInventoryConfiguration(this.params, function(err) {
-    if (err) console.log(err);
+    if (err) return callback(err);
 
     console.log(`created ${bucket}:${id}`);
 
@@ -77,7 +77,7 @@ S3Inventory.prototype.update = function(callback) {
       Bucket: bucket,
       Id: old
     }, function (err) {
-      if (err) console.log(err);
+      if (err) return callback(err);
 
       console.log(`deleted ${bucket}:${old}`);
 
@@ -95,7 +95,7 @@ S3Inventory.prototype.delete = function(callback) {
     Bucket: bucket,
     Id: id
   }, function(err) {
-    if (err) console.log(err);
+    if (err) return callback(err);
 
     console.log(`deleted ${bucket}:${id}`);
 
