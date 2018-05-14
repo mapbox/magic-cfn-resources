@@ -1,3 +1,7 @@
+### 1.6.0
+
+Added `S3Inventory` magic resource.
+
 ### 1.5.4
 
 Fixed the readme to show that you can add `PrefixFilter` and `SuffixFilter` to your s3NotificationTopicConfig.
