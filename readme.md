@@ -56,6 +56,10 @@ You can use `Fn::GetAtt` to obtain the following data:
 
 Creates a notification topic configuration on an S3 bucket.
 
+### S3Inventory
+
+Creates an [InventoryConfiguration](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-s3-bucket-inventoryconfiguration.html) for **an existing** S3 bucket that is not defined in CloudFormation. If you are defining an S3 bucket in CloudFormation, you can use the native CloudFormation support for this configuration.
+
 ## To create a magical resource in your own CloudFormation template:
 #### In an existing script or in a new script (i.e. `sns-subscription.js`):
 ```js
@@ -165,6 +169,36 @@ const S3TopicConfig = magicCfnResources.build({
     BucketNotificationResources: [ 'bucket Arn' ] 
     // if Bucket permissions need to be scoped, default is access to all resources (optional)
   } 
+});
+```
+
+*S3Inventory*
+
+```js
+const S3InventoryConfig = magic.build({
+  CustomResourceName: 'S3Inventory',
+  LogicalName: 'Logical Name', // a name to refer to the custom resource being built
+  S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
+  S3Key: 'Key', // the S3 key for where the handler lives
+  Handler: 'index.S3Inventory', // references the handler created in the repository
+  Properties: { // Properties here are identical to those in the CloudFormation-native InventoryConfiguration
+    BucketRegion: 'us-east-1', // the only additional property required
+    Bucket: 'my-bucket',
+    Id: 'my-inventory-id',
+    InventoryConfiguration: {
+      Schedule: { Frequency: 'Daily' },
+      IsEnabled: true,
+      Destination: {
+        S3BucketDestination: {
+          Bucket: cf.getAtt('my-inventory-bucket', 'Arn'),
+          Format: 'ORC'
+        }
+      },
+      OptionalFields: ['Size', 'LastModifiedDate', 'EncryptionStatus'],
+      IncludedObjectVersions: 'Current',
+      Id: 'my-inventory-id'
+    }
+  }
 });
 ```
 
