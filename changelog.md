@@ -1,3 +1,7 @@
+### 1.6.1
+
+Dynamic url suffixes in CFN for China accounts.
+
 ### 1.6.0
 
 Added `S3Inventory` magic resource.
