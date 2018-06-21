@@ -32,7 +32,7 @@
     "tape": "^4.0.0"
   },
   "dependencies": {
-    "aws-sdk": "^2.1.35",
-    "@mapbox/cloudfriend": "^1.9.1"
+    "@mapbox/cloudfriend": "^1.9.1",
+    "aws-sdk": "^2.1.35"
   }
 }
