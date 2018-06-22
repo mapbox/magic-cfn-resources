@@ -1,5 +1,10 @@
+### 1.6.2
+
+Cloudformation service suffix fixes for China accounts.
+
 ### 1.6.1
 
+Note: Please update directly to 1.6.2.
 Dynamic url suffixes in CFN for China accounts.
 
 ### 1.6.0
