@@ -29,6 +29,19 @@ module.exports = function(event, context) {
     info.AvailabilityZoneCount = publicSubnets.length;
     info.PrivateSubnetAvailabilityZones = privateSubnets.map((subnet) => subnet.AvailabilityZone);
     info.PrivateSubnetAvailabilityZoneCount = privateSubnets.length;
+
+    info.AzIndexedPrivateSubnets = ['a', 'b', 'c', 'd', 'e', 'f'].map((letter) => {
+      const subnet = privateSubnets.find((s) => s.AvailabilityZone.slice(-1) === letter);
+      if (subnet) return subnet.SubnetId;
+      else return { Ref: 'AWS::NoValue' }
+    });
+
+    info.AzIndexedPublicSubnets = ['a', 'b', 'c', 'd', 'e', 'f'].map((letter) => {
+      const subnet = publicSubnets.find((s) => s.AvailabilityZone.slice(-1) === letter);
+      if (subnet) return subnet.SubnetId;
+      else return { Ref: 'AWS::NoValue' }
+    });
+
     info.PublicSubnets = publicSubnets.map((subnet) => subnet.SubnetId);
     info.PrivateSubnets = privateSubnets.map((subnet) => subnet.SubnetId);
     info.RouteTable = results[1].RouteTables[0].RouteTableId;
