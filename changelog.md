@@ -1,3 +1,7 @@
+### 1.8.0
+
+Adds availability-zone-indexed arrays as DefaultVpc properties. See https://github.com/mapbox/magic-cfn-resources/pull/33 for details.
+
 ### 1.7.0
 
 DefaultVPC function now exposes information about private subnets.
