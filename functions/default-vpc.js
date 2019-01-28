@@ -27,6 +27,8 @@ module.exports = function(event, context) {
 
     info.AvailabilityZones = publicSubnets.map((subnet) => subnet.AvailabilityZone);
     info.AvailabilityZoneCount = publicSubnets.length;
+    info.PrivateSubnetAvailabilityZones = privateSubnets.map((subnet) => subnet.AvailabilityZone);
+    info.PrivateSubnetAvailabilityZoneCount = privateSubnets.length;
     info.PublicSubnets = publicSubnets.map((subnet) => subnet.SubnetId);
     info.PrivateSubnets = privateSubnets.map((subnet) => subnet.SubnetId);
     info.RouteTable = results[1].RouteTables[0].RouteTableId;
