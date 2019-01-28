@@ -1,3 +1,7 @@
+### 1.7.0
+
+DefaultVPC function now exposes information about private subnets.
+
 ### 1.6.2
 
 Cloudformation service suffix fixes for China accounts.
