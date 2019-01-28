@@ -53,6 +53,7 @@ test('[default VPC] success', (assert) => {
       AvailabilityZoneCount: 2,
       PrivateSubnetAvailabilityZones: ['1c'],
       PrivateSubnetAvailabilityZoneCount: 1,
+      AzIndexedPublicSubnets: ['a', 'b', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
       AzIndexedPrivateSubnets: [{ Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, 'c', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
       PublicSubnets: ['a', 'b'],
       PrivateSubnets: ['c'],
