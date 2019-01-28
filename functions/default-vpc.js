@@ -9,7 +9,7 @@ module.exports = function(event, context) {
 
   var requestType = event.RequestType.toLowerCase();
   if (requestType === 'delete') return response.send();
-  
+
   var ec2 = new AWS.EC2();
   var info = {};
 
@@ -23,10 +23,12 @@ module.exports = function(event, context) {
     ]);
   }).then((results) => {
     var publicSubnets = results[0].Subnets.filter((subnet) => subnet.MapPublicIpOnLaunch);
+    var privateSubnets = results[0].Subnets.filter((subnet) => !subnet.MapPublicIpOnLaunch);
 
     info.AvailabilityZones = publicSubnets.map((subnet) => subnet.AvailabilityZone);
     info.AvailabilityZoneCount = publicSubnets.length;
     info.PublicSubnets = publicSubnets.map((subnet) => subnet.SubnetId);
+    info.PrivateSubnets = privateSubnets.map((subnet) => subnet.SubnetId);
     info.RouteTable = results[1].RouteTables[0].RouteTableId;
     response.setId(info.VpcId);
     response.send(null, info);

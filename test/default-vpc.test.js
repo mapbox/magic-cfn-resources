@@ -52,6 +52,7 @@ test('[default VPC] success', (assert) => {
       AvailabilityZones: ['1a','1b'],
       AvailabilityZoneCount: 2,
       PublicSubnets: ['a', 'b'],
+      PrivateSubnets: ['c'],
       RouteTable: 'a'
     }, 'returns expected info');
 
