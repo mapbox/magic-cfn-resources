@@ -15,7 +15,7 @@ test('[s3-notification-topic-config] create handles errors', assert => {
   AWS.stub('S3', 'putBucketNotificationConfiguration', (opts, cb) => {
     assert.ok(opts.hasOwnProperty('NotificationConfiguration'), 'should have NotificationConfiguration passed in call');
     return cb(new Error('random error'));
-  }); 
+  });
 
   const notificationConfig = new S3NotificationConfig('test-config', 'arn:aws:sns:us-east-1:special-topic', 'test-bucket', 'us-east-1', ['s3:objectCreated:*']);
 
@@ -38,7 +38,7 @@ test('[s3-notification-topic-config] create handles success', assert => {
   AWS.stub('S3', 'putBucketNotificationConfiguration', (opts, cb) => {
     assert.ok(opts.hasOwnProperty('NotificationConfiguration'), 'should have NotificationConfiguration passed in call');
     return cb(null, 'putBucket success');
-  }); 
+  });
 
   const notificationConfig = new S3NotificationConfig('test-config', 'arn:aws:sns:us-east-1:special-topic', 'test-bucket', 'us-east-1', ['s3:objectCreated:*']);
 
@@ -80,7 +80,7 @@ test('[s3-notification-topic-config] update deletes old topic config and creates
   const notificationConfig = new S3NotificationConfig(
     'test-config',
     'arn:aws:sns:us-east-1:special-topic',
-    'test-bucket', 
+    'test-bucket',
     'us-east-1',
     ['s3:objectCreated:*'],
     undefined,
@@ -117,7 +117,7 @@ test('[s3-notification-topic-config] delete removes the config', assert => {
     assert.ok(opts.hasOwnProperty('NotificationConfiguration'), 'should have NotificationConfiguration passed in call');
     assert.ok(opts.NotificationConfiguration.TopicConfigurations.length === 0, 'should not have any TopicConfigurations');
     return cb(null, 'putBucket success');
-  }); 
+  });
 
   const notificationConfig = new S3NotificationConfig('test-config', 'arn:aws:sns:us-east-1:special-topic', 'test-bucket', 'us-east-1', ['s3:objectCreated:*']);
 
@@ -154,10 +154,10 @@ test('[s3-notification-topic-config] manage parses events and relays LatestStrea
     assert.ok(opts.hasOwnProperty('NotificationConfiguration'), 'should have NotificationConfiguration passed in call');
     assert.ok(opts.NotificationConfiguration.TopicConfigurations.length === 1, 'should have a TopicConfiguration');
     return cb(null, 'putBucket success');
-  }); 
+  });
 
   S3NotificationConfig.manage({
-    ResponseURL: 'https://aws.response.com/hello',
+    ResponseURL: 'https://api.mapbox.com/hello',
     PhysicalResourceId: 'abc',
     StackId: 'abc',
     LogicalResourceId: 'abc',

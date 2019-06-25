@@ -124,7 +124,7 @@ test('[dynamodb-stream-label] manage parses events and relays LatestStreamLabel 
   };
 
   DynamoDBStreamLabel.manage({
-    ResponseURL: 'http://aws.response.com/hello',
+    ResponseURL: 'https://api.mapbox.com/hello',
     PhysicalResourceId: 'abc',
     StackId: 'abc',
     LogicalResourceId: 'abc',
