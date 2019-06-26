@@ -9,7 +9,7 @@ test('[stack-outputs] create handles errors', assert => {
       StackName: 'StackName'
     }, 'describeStacks params');
     return cb(new Error('random error'));
-  }); 
+  });
 
   const stackoutputs = new StackOutputs('StackName', 'us-east-1');
 
@@ -26,7 +26,7 @@ test('[stack-outputs] create handles success', assert => {
       StackName: 'StackName'
     }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
-  }); 
+  });
 
   const stackoutputs = new StackOutputs('StackName', 'us-east-1');
 
@@ -45,7 +45,7 @@ test('[stack-outputs] update does the same thing as create', assert => {
       StackName: 'StackName'
     }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
-  }); 
+  });
 
   const stackoutputs = new StackOutputs('StackName', 'us-east-1');
 
@@ -83,11 +83,11 @@ test('[stack-outputs] manage parses events and relays LatestStreamLabel through 
       StackName: 'Stack Name'
     }, 'describeStacks params');
     return cb(null, { Stacks: [ { Outputs: [{ OutputKey: 'First', OutputValue: 'first output' }, { OutputKey: 'Second', OutputValue: 'second output'}] }] });
-  }); 
+  });
 
 
   StackOutputs.manage({
-    ResponseURL: 'http://aws.response.com/hello',
+    ResponseURL: 'http://api.mapbox.com/hello',
     PhysicalResourceId: 'abc',
     StackId: 'abc',
     LogicalResourceId: 'abc',
@@ -108,4 +108,3 @@ test('[stack-outputs] manage parses events and relays LatestStreamLabel through 
   });
 
 });
-

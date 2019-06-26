@@ -23,7 +23,7 @@ test('[spot-fleet] create handles errors', assert => {
       DryRun: false
     }, 'requestSpotFleet parameters');
     return cb(new Error('random error'));
-  }); 
+  });
 
   const spotfleet = new SpotFleet({
     AllocationStrategy : 'diversified',
@@ -110,7 +110,7 @@ test('[spot-fleet] update updates the requestId, yields the requestId from _this
 
   const describeSpotFleetRequests = AWS.stub('EC2', 'describeSpotFleetRequests').yields(null, {
     SpotFleetRequestConfigs: [
-      { 
+      {
         SpotFleetRequestConfig: {
           TargetCapacity: 1
         }
@@ -127,7 +127,7 @@ test('[spot-fleet] update updates the requestId, yields the requestId from _this
     AWS.EC2.restore();
     assert.end();
   });
-    
+
 });
 
 test('[spot-fleet] delete cancels spot fleet request', (assert) => {
@@ -185,7 +185,7 @@ test('[spot-fleet] delete does nothing if request id not found', (assert) => {
 });
 
 test('[spot-fleet] manage parses events and relays LatestStreamLabel through Response', assert => {
-  
+
   http.request = (options, cb) => {
     return {
       on: function() {
@@ -219,7 +219,7 @@ test('[spot-fleet] manage parses events and relays LatestStreamLabel through Res
   });
 
   SpotFleet.manage({
-    ResponseURL: 'http://aws.response.com/hello',
+    ResponseURL: 'http://api.mapbox.com/hello',
     PhysicalResourceId: 'abc',
     StackId: 'abc',
     LogicalResourceId: 'abc',

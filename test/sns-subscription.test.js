@@ -11,7 +11,7 @@ test('[sns-subscription] create handles errors', assert => {
       Endpoint: 'someone@mapbox.com'
     });
     return cb(new Error('random error'));
-  }); 
+  });
 
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone@mapbox.com');
 
@@ -30,7 +30,7 @@ test('[sns-subscription] create handles success', assert => {
       Endpoint: 'someone@mapbox.com'
     });
     return cb();
-  }); 
+  });
 
   const subscription = new SnsSubscription('arn:aws:sns:us-east-1:special-topic', 'email', 'someone@mapbox.com');
 
@@ -50,14 +50,14 @@ test('[sns-subscription] update unsubscribes old endpoint and subscribes the new
       Endpoint: 'someone-new@mapbox.com'
     });
     return cb();
-  }); 
+  });
 
   const unsubscribe = AWS.stub('SNS', 'unsubscribe', (opts, cb) => {
     assert.deepEquals(opts, {
       SubscriptionArn: 'arn:aws:sns:us-east-1:special-subscription'
     });
     return cb();
-  }); 
+  });
 
   const listSubscriptionsByTopic = AWS.stub('SNS', 'listSubscriptionsByTopic')
     .onCall(0)
@@ -106,14 +106,14 @@ test('[sns-subscription] update still works when old subscription is not found',
       Endpoint: 'someone-new@mapbox.com'
     });
     return cb();
-  }); 
+  });
 
   const unsubscribe = AWS.stub('SNS', 'unsubscribe', (opts, cb) => {
     assert.deepEquals(opts, {
       SubscriptionArn: 'arn:aws:sns:us-east-1:special-subscription'
     });
     return cb();
-  }); 
+  });
 
   const listSubscriptionsByTopic = AWS.stub('SNS', 'listSubscriptionsByTopic', (opts, callback) => {
     assert.deepEquals(opts, { TopicArn: 'arn:aws:sns:us-east-1:special-topic' });
@@ -149,7 +149,7 @@ test('[sns-subscription] delete does same thing as update', assert => {
   });
 
   const listSubscriptionsByTopic = AWS.stub('SNS', 'listSubscriptionsByTopic', (opts, callback) => {
-    assert.deepEquals(opts, { TopicArn: 'arn:aws:sns:us-east-1:special-topic' }); 
+    assert.deepEquals(opts, { TopicArn: 'arn:aws:sns:us-east-1:special-topic' });
     return callback(null, {
       Subscriptions: [{
         Endpoint: 'the.wrong.email@mapbox.com',
@@ -188,10 +188,10 @@ test('[sns-subscription] manage parses events and relays LatestStreamLabel throu
       Endpoint: 'endpoint'
     });
     return cb();
-  }); 
+  });
 
   SnsSubscription.manage({
-    ResponseURL: 'http://aws.response.com/hello',
+    ResponseURL: 'http://api.mapbox.com/hello',
     PhysicalResourceId: 'abc',
     StackId: 'abc',
     LogicalResourceId: 'abc',
