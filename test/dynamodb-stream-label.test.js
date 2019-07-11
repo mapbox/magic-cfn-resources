@@ -1,7 +1,7 @@
 const DynamoDBStreamLabel = require('../functions/dynamodb-stream-label');
 const test = require('tape');
 const AWS = require('@mapbox/mock-aws-sdk-js');
-const http = require('http');
+const https = require('https');
 
 // Confirm create calls describe table and returns LatestStreamLabel
 // Confirm create handles labelless table
@@ -111,7 +111,7 @@ test('[dynamodb-stream-label] manage parses events and relays LatestStreamLabel 
     });
   });
 
-  http.request = (options, cb) => {
+  https.request = (options, cb) => {
     return {
       on: function() {
         return this;
