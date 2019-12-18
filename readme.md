@@ -96,7 +96,7 @@ const SnsSubscription = magicCfnResources.build({
 *DynamoDBStreamLabel*
 ```js
 const DynamoDBStreamLabel = magicCfnResources.build({
-  CustomResourcenName: 'DynamoDBStreamLabel',
+  CustomResourceName: 'DynamoDBStreamLabel',
   LogicalName: 'Logical Name', // a name to refer to the custom resource being built
   S3Bucket: 'Bucket Name', // the S3 bucket the code for the handler lives in
   S3Key: 'Key', // the S3 key for where the handler lives
