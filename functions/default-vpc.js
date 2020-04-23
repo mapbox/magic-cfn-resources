@@ -18,7 +18,7 @@ module.exports = function(event, context) {
   }).promise().then((data) => {
     info.VpcId = data.Vpcs[0].VpcId;
     return Promise.all([
-      ec2.describeSubnets({ Filters: [{ Name: 'vpc-id', Values: [info.VpcId] }] }).promise(),
+      ec2.describeSubnets({ Filters: [{ Name: 'defaultForAz', Values: ['true'] }, { Name: 'vpc-id', Values: [info.VpcId] }] }).promise(),
       ec2.describeRouteTables({ Filters: [{ Name: 'vpc-id', Values: [info.VpcId] }] }).promise()
     ]);
   }).then((results) => {
