@@ -78,6 +78,7 @@ SnsSubscription.prototype.create = function(callback) {
     TopicArn: this.snsTopicArn,
     Endpoint: this.endpoint
   };
+  console.log('Creating subscription %s', JSON.stringify(params));
   this.sns.subscribe(params, callback);
 };
 
@@ -117,6 +118,7 @@ SnsSubscription.prototype.delete = function(callback) {
       if (err) return callback(err);
 
       var arn = data.Subscriptions.filter(function(subscription) {
+        console.log('Found subscription %s', JSON.stringify(subscription));
         return subscription.Endpoint === endpoint;
       }).map(function(subscription) {
         return subscription.SubscriptionArn;
