@@ -1,3 +1,15 @@
+### 2.1.0
+
+Adds a list of VPC route tables as a DefaultVpc property.
+
+### 2.0.0
+
+Update to Node 14.x
+
+### 1.9.0
+
+Update to Node 10.x
+
 ### 1.8.0
 
 Adds availability-zone-indexed arrays as DefaultVpc properties. See https://github.com/mapbox/magic-cfn-resources/pull/33 for details.
