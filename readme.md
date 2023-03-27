@@ -51,6 +51,7 @@ You can use `Fn::GetAtt` to obtain the following data:
 - AvailabilityZoneCount: the number of availability zones
 - PublicSubnets: an array of strings representing the VPC's public subnets
 - RouteTable: the ID for the first route table in the VPC
+- RouteTables: IDs of all of the route tables in the VPC
 
 ### S3NotificationTopicConfig
 
@@ -166,9 +167,9 @@ const S3TopicConfig = magicCfnResources.build({
     EventTypes: ['s3:ObjectCreated:*'], // the types of event to notify about
     PrefixFilter: 'prefix', // a prefix to filter notifications on (optional)
     SuffixFilter: '.jpg', // a suffix to filter notifications on (optional)
-    BucketNotificationResources: [ 'bucket Arn' ] 
+    BucketNotificationResources: [ 'bucket Arn' ]
     // if Bucket permissions need to be scoped, default is access to all resources (optional)
-  } 
+  }
 });
 ```
 
