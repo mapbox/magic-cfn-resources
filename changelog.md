@@ -1,3 +1,7 @@
+### 3.0.0
+
+Update to Node 16.x
+
 ### 2.1.0
 
 Adds a list of VPC route tables as a DefaultVpc property.
