@@ -45,6 +45,7 @@ module.exports = function(event, context) {
     info.PublicSubnets = publicSubnets.map((subnet) => subnet.SubnetId);
     info.PrivateSubnets = privateSubnets.map((subnet) => subnet.SubnetId);
     info.RouteTable = results[1].RouteTables[0].RouteTableId;
+    info.RouteTables = results[1].RouteTables.map((rt) => rt.RouteTableId);
     response.setId(info.VpcId);
     response.send(null, info);
   }).catch((err) => response.send(err));

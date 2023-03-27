@@ -36,8 +36,8 @@ test('[default VPC] success', (assert) => {
   AWS.stub('EC2', 'describeRouteTables', function() {
     this.request.promise.returns(Promise.resolve({
       RouteTables: [
-        { RouteTableId: 'a' },
-        { RouteTableId: 'b' }
+        { RouteTableId: 'x' },
+        { RouteTableId: 'z' }
       ]
     }));
   });
@@ -57,7 +57,8 @@ test('[default VPC] success', (assert) => {
       AzIndexedPrivateSubnets: [{ Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, 'c', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
       PublicSubnets: ['a', 'b'],
       PrivateSubnets: ['c'],
-      RouteTable: 'a'
+      RouteTable: 'x',
+      RouteTables: ['x', 'z']
     }, 'returns expected info');
 
     assert.equal(utils.validCloudFormationEvent.callCount, 1, 'checks event validity');
