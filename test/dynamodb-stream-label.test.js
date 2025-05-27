@@ -1,7 +1,7 @@
 const DynamoDBStreamLabel = require('../functions/dynamodb-stream-label');
 const test = require('tape');
 const AWS = require('@mapbox/mock-aws-sdk-js');
-const http = require('http');
+const https = require('https');
 
 // Confirm create calls describe table and returns LatestStreamLabel
 // Confirm create handles labelless table
@@ -9,6 +9,16 @@ const http = require('http');
 // Confirm update calls create
 // Confirm delete does nothing
 // Confirm manage function parses event and relays LatestStreamLabel through Response
+
+test('[dynamodb-stream-label] constructor', t => {
+  t.throws(() => new DynamoDBStreamLabel(null, 'us-east-1'), /Missing Parameter TableName/, 'throws on missing tableName');
+  t.throws(() => new DynamoDBStreamLabel('my-table', null), /Missing Parameter TableRegion/, 'throws on missing tableRegion');
+
+  const label = new DynamoDBStreamLabel('my-table', 'us-east-1');
+  t.ok(label.dynamodb, 'dynamodb instance is created');
+  t.equal(label.tableName, 'my-table', 'tableName is set correctly');
+  t.end();
+});
 
 test('[dynamodb-stream-label] create handles errors', assert => {
   AWS.stub('DynamoDB', 'describeTable', (opts, cb) => {
@@ -111,7 +121,7 @@ test('[dynamodb-stream-label] manage parses events and relays LatestStreamLabel 
     });
   });
 
-  http.request = (options, cb) => {
+  https.request = (options, cb) => {
     return {
       on: function() {
         return this;
