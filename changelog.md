@@ -1,3 +1,7 @@
+### 4.0.0
+
+Updates to Node 22.x
+
 ### 3.0.0
 
 Update to Node 16.x
@@ -64,9 +68,11 @@ Added `default-vpc` resource
 Rewrote parts of `/lib/build.js` so that references to SpotFleet specific properties were not evaluated for non-spotfleets
 
 ### 1.2.4
+
 Adjusted Custom Resource names from 'Custom::MagicCfnResource' to Custom::CustomResourceName, IE a SpotFleet will be Custom::SpotFleet
 
 ### 1.2.3
+
 Fixed cloudfriend being a dev dependency
 
 ### 1.2.2
