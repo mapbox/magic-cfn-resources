@@ -1,3 +1,7 @@
+### 4.1.0
+
+Adds `FargateArm64PrivateSubnets` to the DefaultVpc resource.
+
 ### 4.0.0
 
 Updates to Node 22.x
