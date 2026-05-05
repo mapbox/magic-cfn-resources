@@ -50,6 +50,8 @@ You can use `Fn::GetAtt` to obtain the following data:
 - AvailabilityZones: an array of strings representing the VPC's availability zones
 - AvailabilityZoneCount: the number of availability zones
 - PublicSubnets: an array of strings representing the VPC's public subnets
+- PrivateSubnets: an array of strings representing the VPC's private subnets
+- FargateArm64PrivateSubnets: an array of private subnet IDs excluding availability zones where Fargate ARM64 is unsupported
 - RouteTable: the ID for the first route table in the VPC
 - RouteTables: IDs of all of the route tables in the VPC
 

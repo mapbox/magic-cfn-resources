@@ -28,7 +28,8 @@ test('[default VPC] success', (assert) => {
       Subnets: [
         { SubnetId: 'a', AvailabilityZone: '1a', MapPublicIpOnLaunch: true },
         { SubnetId: 'b', AvailabilityZone: '1b', MapPublicIpOnLaunch: true },
-        { SubnetId: 'c', AvailabilityZone: '1c', MapPublicIpOnLaunch: false }
+        { SubnetId: 'c', AvailabilityZone: '1c', AvailabilityZoneId: 'use1-az3', MapPublicIpOnLaunch: false },
+        { SubnetId: 'd', AvailabilityZone: '1d', AvailabilityZoneId: 'use1-az6', MapPublicIpOnLaunch: false }
       ]
     }));
   });
@@ -51,12 +52,13 @@ test('[default VPC] success', (assert) => {
       VpcId: 'vpcid',
       AvailabilityZones: ['1a','1b'],
       AvailabilityZoneCount: 2,
-      PrivateSubnetAvailabilityZones: ['1c'],
-      PrivateSubnetAvailabilityZoneCount: 1,
+      PrivateSubnetAvailabilityZones: ['1c', '1d'],
+      PrivateSubnetAvailabilityZoneCount: 2,
       AzIndexedPublicSubnets: ['a', 'b', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
-      AzIndexedPrivateSubnets: [{ Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, 'c', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
+      AzIndexedPrivateSubnets: [{ Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }, 'c', 'd', { Ref: 'AWS::NoValue' }, { Ref: 'AWS::NoValue' }],
       PublicSubnets: ['a', 'b'],
-      PrivateSubnets: ['c'],
+      PrivateSubnets: ['c', 'd'],
+      FargateArm64PrivateSubnets: ['d'],
       RouteTable: 'x',
       RouteTables: ['x', 'z']
     }, 'returns expected info');

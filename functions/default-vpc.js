@@ -2,6 +2,8 @@ var AWS = require('aws-sdk');
 var utils = require('../lib/utils');
 var Response = require('../lib/response');
 
+var FARGATE_ARM64_UNSUPPORTED_AZ_IDS = ['use1-az3'];
+
 module.exports = function(event, context) {
   if (!utils.validCloudFormationEvent(event))
     return context.done(null, 'ERROR: Invalid CloudFormation event');
@@ -44,6 +46,9 @@ module.exports = function(event, context) {
 
     info.PublicSubnets = publicSubnets.map((subnet) => subnet.SubnetId);
     info.PrivateSubnets = privateSubnets.map((subnet) => subnet.SubnetId);
+    info.FargateArm64PrivateSubnets = privateSubnets
+      .filter((subnet) => !FARGATE_ARM64_UNSUPPORTED_AZ_IDS.includes(subnet.AvailabilityZoneId))
+      .map((subnet) => subnet.SubnetId);
     info.RouteTable = results[1].RouteTables[0].RouteTableId;
     info.RouteTables = results[1].RouteTables.map((rt) => rt.RouteTableId);
     response.setId(info.VpcId);
