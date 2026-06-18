@@ -76,3 +76,19 @@ Use [JSDoc style comments](http://usejsdoc.org/index.html) and build documentati
 - Try to write functions to have no external dependencies aside from the [AWS SDK for JS](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/index.html).
 - During the create event you must assign your backend resource a PhysicalResourceId. Make sure that this ID will be sufficient to identify the backend resource in a later update or delete event.
 - The update and delete events are particularly challenging. They may or may not be triggered after a resource was actually created, so it is not safe to assume that the resource already exists. Be sure to handle both scenarios or you may end up with a stack that you're unable to delete.
+
+## Releasing a new version
+
+Releases are published to npm via GitHub Actions.
+
+### Steps
+
+1. **Bump the version** in `package.json` (follow [semver](https://semver.org))
+2. **Update `CHANGELOG.md`** with a summary of what changed
+3. **Open a PR**, get it reviewed and merged to `master`
+4. **Trigger the release** from the [Actions tab](../../actions/workflows/npm-release.yml):
+   - Select **NPM release** → **Run workflow** → run from `master`
+
+The workflow will publish to npm and create a GitHub release with auto-generated notes.
+
+> **Note:** Only Mapbox maintainers with write access to this repository can trigger the release workflow. External contributors can open and contribute to PRs, but releases are always cut by the owning team.
